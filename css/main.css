@@ -1,0 +1,130 @@
+* {
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+*:after, *:before {
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: #eee;
+}
+body #container1, body #container2 {
+  display: none;
+}
+body #max1, body #max2 {
+  background: #74b9ff;
+  padding: 0.5rem;
+  border-radius: 0.3rem;
+  margin: 0 auto 1rem;
+}
+body #max1 p, body #max2 p {
+  font-size: 1.5em;
+}
+body #find {
+  display: none;
+  width: 23%;
+  margin: 1rem auto 0;
+}
+body .checks {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  width: 100%;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+body .checks label {
+  margin: 1rem;
+}
+body h1 {
+  margin-top: 1rem;
+}
+body .main__row {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  width: 100%;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+body .main__row .main {
+  margin: 0.3rem;
+  width: 25rem;
+  height: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+body .main__row .main:last-child {
+  display: none;
+}
+body .main__row .main .boxes {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+body .main__row .main .boxes .box {
+  margin: 0.5rem;
+}
+body .checked {
+  background: #a29bfe;
+}
+body .guessed {
+  background: #f6e58d;
+}
+body .correct {
+  background: #1dd1a1;
+}
+body .wrong {
+  background: #ff7979;
+}
+body table {
+  padding: 1rem;
+  border: 1px solid crimson;
+  margin: 0 auto;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+}
+body table tr {
+  max-width: 5rem;
+  width: 5rem;
+}
+body table tr td, body table tr th {
+  width: 2rem;
+  font-size: 1.5em;
+  height: 2rem;
+  text-align: center;
+}
+body table tr td {
+  cursor: pointer;
+}
+body footer {
+  margin-top: 4rem;
+  padding: 1rem;
+  text-align: center;
+}

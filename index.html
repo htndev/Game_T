@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta content="width=device-width, initial-scale=1" name="viewport">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
+  <link href="./css/main.css" rel="stylesheet">
+  <title>Lab 04</title>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+  <script defer src="scripts/main.js"></script>
+</head>
+<body>
+  <h1 class="center-align">Лабораторна робота №3</h1>
+  <p class="center-align flow-text">Гра з нульовою суммою</p>
+  <h3 class="center-align">Введіть кількість стратегій:</h3>
+  <div class="main__row">
+    <div class="col s8 center-align main">
+      <div class="boxes">
+        <div class="col s4 box">
+          <div class="col s2">
+            <h4>Гравець 1</h4>
+            <div class="col s1">
+              <input id="player1" max="10" min="1" type="number" value="3">
+            </div>
+          </div>
+        </div>
+        <div class="col s4 box">
+          <div class="col s2">
+            <h4>Гравець 2</h4>
+            <div class="col s1">
+              <input id="player2" max="10" min="1" type="number" value="3">
+            </div>
+          </div>
+        </div>
+      </div>
+      <a class="waves-effect waves-light btn purple darken-1" id="generate">Згенерувати</a>
+    </div>
+    <div class="col s8 center-align main" id="minMaxSection">
+      <div class="boxes">
+        <div class="col s4 box">
+        <div class="col s2">
+          <h4>Від</h4>
+          <div class="col s1">
+            <input id="min" max="100" min="-100" type="number" value="-9">
+          </div>
+        </div>
+      </div>
+      <div class="col s4 box">
+        <div class="col s2">
+          <h4>До</h4>
+          <div class="col s1">
+            <input id="max" max="100" min="-100" type="number" value="9">
+          </div>
+        </div>
+      </div>
+    </div>
+      <a class="waves-effect waves-light btn pink darken-3" id="fill">Рандомні платежі</a>
+    </div>
+  </div>
+  <div class="checks">
+    <label>
+      <input type="checkbox" id="showFirst"/>
+      <span>Показати першого гравця</span>
+    </label>
+    <label>
+      <input type="checkbox" id="showSecond"/>
+      <span>Показати другого гравця</span>
+    </label>
+  </div>
+  <a class="waves-effect waves-light btn pink accent-1" id="find">Визначити функції реакції</a>
+  <div class="container">
+    <div id="table1"></div>
+  </div>
+  <div class="container">
+    <div id="table2"></div>
+  </div>
+  <div class="container" id="container1">
+    <h3 class="center-align">Гравець 1</h3>
+    <div id="max1" class="z-depth-3 center-align"></div>
+  </div>
+  <div class="container" id="container2">
+    <h3 class="center-align">Гравець 2</h3>
+    <div id="max2" class="z-depth-3 center-align"></div>
+  </div>
+  <div class="container">
+    <table>
+      <thead>
+        <tr>
+          <th>max</th>
+          <th>maxmin</th>
+          <th>Сідлова точка</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td id="minS"></td>
+          <td id="maxS"></td>
+          <td id="sidlova"></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <footer>
+    <h3>Ванільчук О. В. ПІ-57</h3>
+  </footer>
+</body>
+</html>
