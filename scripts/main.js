@@ -2,60 +2,70 @@
  * @vars are stable
  */
 const
-  doc           = document,
-  player1       = doc.querySelector( '#player1' ),
-  player2       = doc.querySelector( '#player2' ),
-  generateBtn   = doc.querySelector( '#generate' ),
-  fillBtn       = doc.querySelector( '#fill' ),
-  minMaxSection = doc.querySelector( '#minMaxSection' ),
-  find          = doc.querySelector( '#find' ),
-  maxS          = doc.querySelector( '#maxS' ),
-  minS          = doc.querySelector( '#minS' ),
-  sidlova       = doc.querySelector( '#sidlova' ),
-  tableBlock1   = doc.querySelector( '#table1' ),
-  tableBlock2   = doc.querySelector( '#table2' ),
-  max1          = doc.querySelector( '#max1' ),
-  max2          = doc.querySelector( '#max2' ),
-  container1    = doc.querySelector( '#container1' ),
-  container2    = doc.querySelector( '#container2' );
+  doc                     = document,
+  firstPlayersStrategies  = doc.querySelector( '#firstPlayersStrategies' ),
+  secondPlayerStrategies = doc.querySelector( '#secondPlayerStrategies' ),
+  generateBtn             = doc.querySelector( '#generate' ),
+  fillBtn                 = doc.querySelector( '#fill' ),
+  minmaxBlockSection      = doc.querySelector( '#minmaxBlockSection' ),
+  findBtn                 = doc.querySelector( '#find' ),
+  maxminBlock             = doc.querySelector( '#maxminBlock' ),
+  minmaxBlock             = doc.querySelector( '#minmaxBlock' ),
+  saddlePoint             = doc.querySelector( '#saddlePoint' ),
+  tableBlock1             = doc.querySelector( '#table1' ),
+  tableBlock2             = doc.querySelector( '#table2' ),
+  max1                    = doc.querySelector( '#max1' ),
+  max2                    = doc.querySelector( '#max2' ),
+  container1              = doc.querySelector( '#container1' ),
+  container2              = doc.querySelector( '#container2' );
 
 /**
  * @vars are dynamic
  */
 let
-  field    = [],
-  tableP1,
-  tableP2,
-  sndRow   = [],
-  _max     = -1000,
-  _min     = 1000,
-  valueSet = false,
-  finished = false;
+  firstPlayerTable  = [],
+  tableOfFirstPlayer,
+  tableOfSecondPlayer,
+  secondPlayerTable = [],
+  maxmin            = -1000,
+  minmax            = 1000,
+  valueSet          = false,
+  finished          = false;
 
+// Function that set bg to the ceil in firstPlayerTable
 document.body.addEventListener( 'click', function ( e ) {
+  // Checking if it's a playing firstPlayerTable
   if ( e.target.tagName === 'TD' && e.path[ 2 ].nodeName === 'TABLE' ) {
+    // Checking if values are set and game not finished
     if ( valueSet && !finished ) {
       e.target.classList.toggle( 'guessed' );
     }
   }
 } );
 
+// Button that generate table
 generateBtn.addEventListener( 'click', function () {
   resetTable();
+  settingGamingField();
 } );
 
+// Button that responds for filling table's values
 fillBtn.addEventListener( 'click', function () {
   resetTable();
   fillTable();
   valueSet = true;
 } );
 
-find.addEventListener( 'click', function () {
+// Button that responds for finding values in table
+findBtn.addEventListener( 'click', function () {
+  // Finding first player's strategies
   getPlayerOneStrategy();
+  // Finding second player's strategies
   getPlayerTwoStrategy();
-  maxS.innerText = _max;
-  minS.innerText = _min;
-  field.forEach( row => {
+  maxminBlock.innerText = maxmin;
+  minmaxBlock.innerText = minmax;
+  // Setting correct or wrong flags of user
+  firstPlayerTable.forEach( row => {
     row.forEach( ceil => {
       if ( ceil.html.classList.contains( 'guessed' ) ) {
         if ( ceil.html.classList.contains( 'checked' ) ) {
@@ -70,7 +80,7 @@ find.addEventListener( 'click', function () {
       }
     } );
   } );
-  sndRow.forEach( ceil => {
+  secondPlayerTable.forEach( ceil => {
     if ( ceil.classList.contains( 'guessed' ) ) {
       if ( ceil.classList.contains( 'checked' ) ) {
         ceil.classList.remove( 'checked' );
@@ -83,8 +93,8 @@ find.addEventListener( 'click', function () {
       }
     }
   } );
-  sidlova.innerText = _max === _min
-                      ? _max
-                      : 'Відсутня';
+  saddlePoint.innerText = maxmin === minmax
+                          ? maxmin
+                          : 'Відсутня';
   finished = true;
 } );

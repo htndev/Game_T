@@ -8,6 +8,8 @@
   <title>Lab 04</title>
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
   <script defer src="scripts/main.js"></script>
+  <script defer src="scripts/findingFunctions.js"></script>
+  <script defer src="scripts/tableFunctions.js"></script>
 </head>
 <body>
   <h1 class="center-align">Лабораторна робота №3</h1>
@@ -20,7 +22,7 @@
           <div class="col s2">
             <h4>Гравець 1</h4>
             <div class="col s1">
-              <input id="player1" max="10" min="1" type="number" value="3">
+              <input id="firstPlayersStrategies" max="10" min="1" type="number" value="3">
             </div>
           </div>
         </div>
@@ -28,20 +30,20 @@
           <div class="col s2">
             <h4>Гравець 2</h4>
             <div class="col s1">
-              <input id="player2" max="10" min="1" type="number" value="3">
+              <input id="secondPlayerStrategies" max="10" min="1" type="number" value="3">
             </div>
           </div>
         </div>
       </div>
       <a class="waves-effect waves-light btn purple darken-1" id="generate">Згенерувати</a>
     </div>
-    <div class="col s8 center-align main" id="minMaxSection">
+    <div class="col s8 center-align main" id="minmaxBlockSection">
       <div class="boxes">
         <div class="col s4 box">
         <div class="col s2">
           <h4>Від</h4>
           <div class="col s1">
-            <input id="min" max="100" min="-100" type="number" value="-9">
+            <label for="min"><input id="min" max="100" min="-100" type="number" value="-9"></label>
           </div>
         </div>
       </div>
@@ -49,7 +51,7 @@
         <div class="col s2">
           <h4>До</h4>
           <div class="col s1">
-            <input id="max" max="100" min="-100" type="number" value="9">
+            <label for="max"><input id="max" max="100" min="-100" type="number" value="9"></label>
           </div>
         </div>
       </div>
@@ -59,43 +61,51 @@
   </div>
   <div class="checks">
     <label>
-      <input type="checkbox" id="showFirst"/>
+      <input id="showFirst" type="checkbox"/>
       <span>Показати першого гравця</span>
     </label>
     <label>
-      <input type="checkbox" id="showSecond"/>
+      <input id="showSecond" type="checkbox"/>
       <span>Показати другого гравця</span>
     </label>
   </div>
   <a class="waves-effect waves-light btn pink accent-1" id="find">Визначити функції реакції</a>
   <div class="container">
-    <div id="table1"></div>
+    <div class="row">
+      <div class="container col s12 m6">
+        <div id="table1"></div>
+      </div>
+      <div class="container col s12 m6">
+        <div id="table2"></div>
+      </div>
+    </div>
   </div>
   <div class="container">
-    <div id="table2"></div>
-  </div>
-  <div class="container" id="container1">
-    <h3 class="center-align">Гравець 1</h3>
-    <div id="max1" class="z-depth-3 center-align"></div>
-  </div>
-  <div class="container" id="container2">
-    <h3 class="center-align">Гравець 2</h3>
-    <div id="max2" class="z-depth-3 center-align"></div>
+    <div class="row">
+      <div class="container col s12 m6" id="container1">
+        <h3 class="center-align">Гравець 1</h3>
+        <div class="z-depth-3 center-align" id="max1"></div>
+      </div>
+      <div class="container col s12 m6" id="container2">
+        <h3 class="center-align">Гравець 2</h3>
+        <div class="z-depth-3 center-align" id="max2"></div>
+      </div>
+    </div>
   </div>
   <div class="container">
     <table>
       <thead>
         <tr>
-          <th>max</th>
+          <th>minmax</th>
           <th>maxmin</th>
           <th>Сідлова точка</th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td id="minS"></td>
-          <td id="maxS"></td>
-          <td id="sidlova"></td>
+          <td id="minmaxBlock"></td>
+          <td id="maxminBlock"></td>
+          <td id="saddlePoint"></td>
         </tr>
       </tbody>
     </table>

@@ -1,8 +1,8 @@
 // A Player
-function findFirstPlayerColMax ( index, maxVal, len ) {
-  let tmpArr = [];
+function findFirstPlayerColMax ( index, maxVal ) {
+  let tmpArr = []; // Array, which contains ceil in current column
   for ( let i = 0; i < maxVal; i++ ) {
-    tmpArr.push( field[ i ][ index ] );
+    tmpArr.push( firstPlayerTable[ i ][ index ] );
   }
   let max      = -1000,
       maxes    = [],
@@ -18,9 +18,7 @@ function findFirstPlayerColMax ( index, maxVal, len ) {
     }
   }
   max1.innerHTML += `<p>${ index + 1 }. Š<sub>A</sub>(B<sub>${ index + 1 }</sub>) = A<sub>${ maxIndex + 1 }</sub>; Ŭ<sub>A</sub>(B<sub>${ index + 1 }</sub>) = ${ max }</p>`;
-  if ( max < _min ) {
-    _min = max;
-  }
+  minmax = max;
   maxes.forEach( ceil => {
     ceil.html.classList.add( 'checked' );
   } );
@@ -28,8 +26,8 @@ function findFirstPlayerColMax ( index, maxVal, len ) {
 }
 
 function getPlayerOneStrategy () {
-  for ( let row = 0; row < +player2.value; row++ ) {
-    findFirstPlayerColMax( row, +player1.value, +player2.value );
+  for ( let row = 0; row < +secondPlayerStrategies.value; row++ ) {
+    findFirstPlayerColMax( row, +firstPlayersStrategies.value );
   }
 }
 
@@ -46,48 +44,17 @@ function findSecondPlayerRowMax ( row, index ) {
       minIndexes.push( ceil );
     }
   }
-  max2.innerHTML += `<p>${ index + 1 }. Š<sub>B</sub>(A<sub>${ index + 1 }</sub>) = B<sub>${ minIndexes[ 0 ] + 1 }</sub>; Ŭ<sub>B</sub>(A<sub>${ index + 1 }</sub>) = ${ min }</p>`;
-  if ( min > _max ) {
-    _max = min;
-  }
+  max2.innerHTML += `<p>${ index + 1 }. Š<sub>B</sub>(A<sub>${ index + 1 }</sub>) = B<sub>${ minIndexes[ 0 ] + 1 }</sub>; Ŭ<sub>B</sub>(A<sub>${ index + 1 }</sub>) = ${ min * -1 }</p>`;
+  maxmin = min;
   minIndexes.forEach( ind => {
-    switch ( index ) {
-      case 0:
-        sndRow[ ind ].classList.add( 'checked' );
-        break;
-      case 1:
-        sndRow[ ind + ( +player2.value ) ].classList.add( 'checked' );
-        break;
-      case 2:
-        sndRow[ ind + ( +player2.value * 2 ) ].classList.add( 'checked' );
-        break;
-      case 3:
-        sndRow[ ind + ( +player2.value * 3 ) ].classList.add( 'checked' );
-        break;
-      case 4:
-        sndRow[ ind + ( +player2.value * 4 ) ].classList.add( 'checked' );
-        break;
-      case 5:
-        sndRow[ ind + ( +player2.value * 5 ) ].classList.add( 'checked' );
-        break;
-      case 6:
-        sndRow[ ind + ( +player2.value * 6 ) ].classList.add( 'checked' );
-        break;
-      case 7:
-        sndRow[ ind + ( +player2.value * 7 ) ].classList.add( 'checked' );
-        break;
-      case 8:
-        sndRow[ ind + ( +player2.value * 8 ) ].classList.add( 'checked' );
-        break;
-      case 9:
-        sndRow[ ind + ( +player2.value * 9 ) ].classList.add( 'checked' );
-        break;
-    }
+    index === 0
+    ? secondPlayerTable[ ind ].classList.add( 'checked' )
+    : secondPlayerTable[ ind + ( +secondPlayerStrategies.value * index ) ].classList.add( 'checked' );
   } );
 }
 
 function getPlayerTwoStrategy () {
-  field.forEach( ( row, index ) => {
+  firstPlayerTable.forEach( ( row, index ) => {
     findSecondPlayerRowMax( row, index );
   } );
 }

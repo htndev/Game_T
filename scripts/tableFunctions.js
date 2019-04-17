@@ -1,28 +1,34 @@
+// Setting values to the tables
 function fillTable () {
-  _min = 1000;
-  _max = -1000;
+  minmax = 1000;
+  maxmin = -1000;
+  /**
+   * @var Skip is used for moving to the next row
+   * @type {number}
+   */
   let skip = 0;
   let min = +doc.getElementById( 'min' ).value,
       max = +doc.getElementById( 'max' ).value;
-  for ( let row = 0; row < field.length; row++ ) {
-    for ( let ceil = 0; ceil < field[ row ].length; ceil++ ) {
-      field[ row ][ ceil ].value = getRandomValue( min, max );
-      field[ row ][ ceil ].html.innerText = field[ row ][ ceil ].value;
-      sndRow[ ceil + skip ].innerText = field[ row ][ ceil ].value * -1;
+  for ( let row = 0; row < firstPlayerTable.length; row++ ) {
+    for ( let ceil = 0; ceil < firstPlayerTable[ row ].length; ceil++ ) {
+      firstPlayerTable[ row ][ ceil ].value = getRandomValue( min, max );
+      firstPlayerTable[ row ][ ceil ].html.innerText = firstPlayerTable[ row ][ ceil ].value;
+      secondPlayerTable[ ceil + skip ].innerText = firstPlayerTable[ row ][ ceil ].value * -1;
     }
-    skip += +player2.value;
+    skip += +secondPlayerStrategies.value;
   }
-  find.style.display = 'block';
+  findBtn.style.display = 'block';
 }
 
-function createTable ( player1, player2 ) {
+// Creating gaming tables
+function createTables ( firstPlayerStrategies, secondPlayerStrategies ) {
   let header1 = doc.createElement( 'tr' ),
       header2 = doc.createElement( 'tr' ),
       empty1  = doc.createElement( 'th' ),
       empty2  = doc.createElement( 'th' );
   header1.appendChild( empty1 );
   header2.appendChild( empty2 );
-  for ( let i = 0; i < player2; i++ ) {
+  for ( let i = 0; i < firstPlayerStrategies; i++ ) {
     let th1 = doc.createElement( 'th' );
     th1.innerHTML = `B <sub>${ i + 1 }</sub>`;
     let th2 = doc.createElement( 'th' );
@@ -30,10 +36,10 @@ function createTable ( player1, player2 ) {
     header1.appendChild( th1 );
     header2.appendChild( th2 );
   }
-  tableP1.appendChild( header1 );
-  tableP2.appendChild( header2 );
-  for ( let i = 0; i < player1; i++ ) {
-    createRow( i, tableP1, tableP2, player2 );
+  tableOfFirstPlayer.appendChild( header1 );
+  tableOfSecondPlayer.appendChild( header2 );
+  for ( let i = 0; i < secondPlayerStrategies; i++ ) {
+    createRow( i, tableOfFirstPlayer, tableOfSecondPlayer, secondPlayerStrategies );
   }
   let h4_1 = doc.createElement( 'h4' ),
       h4_2 = doc.createElement( 'h4' );
@@ -44,26 +50,44 @@ function createTable ( player1, player2 ) {
   let place1 = doc.querySelector( '#table1' ),
       place2 = doc.querySelector( '#table2' );
   place1.appendChild( h4_1 );
-  place1.appendChild( tableP1 );
+  place1.appendChild( tableOfFirstPlayer );
   place2.appendChild( h4_2 );
-  place2.appendChild( tableP2 );
+  place2.appendChild( tableOfSecondPlayer );
 }
 
 function getRandomValue ( min, max ) {
   return Math.floor( Math.random() * ( max - min ) + min );
 }
 
+// Cleaning gaming field, table of minmax, settings
 function resetTable () {
   max1.innerHTML = '';
   max2.innerHTML = '';
-  tableP1 = tableP2 = null;
+  maxminBlock.innerHTML = '';
+  minmaxBlock.innerHTML = '';
+  saddlePoint.innerHTML = '';
+  finished = false;
+  valueSet = false;
+  firstPlayerTable.forEach( row => {
+    row.forEach( ceil => {
+      ceil.html.removeAttribute('class');
+    } );
+  } );
+  secondPlayerTable.forEach(ceil => {
+    ceil.removeAttribute('class');
+  });
+}
+
+// Generate user settings field
+function settingGamingField () {
+  tableOfFirstPlayer = tableOfSecondPlayer = null;
   tableBlock1.innerHTML = '';
   tableBlock2.innerHTML = '';
-  sndRow.length = field.length = 0;
-  tableP1 = doc.createElement( 'table' );
-  tableP2 = doc.createElement( 'table' );
-  createTable( player1.value, player2.value );
-  minMaxSection.style.display = 'block';
+  secondPlayerTable.length = firstPlayerTable.length = 0;
+  tableOfFirstPlayer = doc.createElement( 'table' );
+  tableOfSecondPlayer = doc.createElement( 'table' );
+  createTables( firstPlayersStrategies.value, secondPlayerStrategies.value );
+  minmaxBlockSection.style.display = 'block';
   tableBlock1.style.display = 'block';
   tableBlock2.style.display = 'block';
   container1.style.display = 'block';
@@ -76,13 +100,9 @@ function resetTable () {
     container2.style.display = 'none';
     tableBlock2.style.display = 'none';
   }
-  maxS.innerHTML = '';
-  minS.innerHTML = '';
-  sidlova.innerHTML = '';
-  finished = false;
-  valueSet = false;
 }
 
+// Creating a row of the tables
 function createRow ( rowIndex, table1, table2, len ) {
   let th1 = doc.createElement( 'th' ),
       tr1 = doc.createElement( 'tr' );
@@ -96,11 +116,12 @@ function createRow ( rowIndex, table1, table2, len ) {
   for ( let i = 0; i < len; i++ ) {
     createCeil( tr1, tr2, row );
   }
-  field.push( row );
+  firstPlayerTable.push( row );
   table1.appendChild( tr1 );
   table2.appendChild( tr2 );
 }
 
+// Creating a ceil in the row
 function createCeil ( tr1, tr2, rowArray ) {
   let td1 = doc.createElement( 'td' ),
       td2 = doc.createElement( 'td' );
@@ -108,7 +129,7 @@ function createCeil ( tr1, tr2, rowArray ) {
     html : td1,
     value: undefined
   } );
-  sndRow.push( td2 );
+  secondPlayerTable.push( td2 );
   tr1.appendChild( td1 );
   tr2.appendChild( td2 );
 }
