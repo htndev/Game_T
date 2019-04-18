@@ -3,19 +3,19 @@ function fillTable () {
   minmax = 1000;
   maxmin = -1000;
   /**
-   * @var Skip is used for moving to the next row
+   * @var indexForSecondTable using for indexing second player's table
    * @type {number}
    */
-  let skip = 0;
   let min = +doc.getElementById( 'min' ).value,
-      max = +doc.getElementById( 'max' ).value;
+      max = +doc.getElementById( 'max' ).value,
+      indexForSecondTable = 0;
   for ( let row = 0; row < firstPlayerTable.length; row++ ) {
     for ( let ceil = 0; ceil < firstPlayerTable[ row ].length; ceil++ ) {
       firstPlayerTable[ row ][ ceil ].value = getRandomValue( min, max );
       firstPlayerTable[ row ][ ceil ].html.innerText = firstPlayerTable[ row ][ ceil ].value;
-      secondPlayerTable[ ceil + skip ].innerText = firstPlayerTable[ row ][ ceil ].value * -1;
+      secondPlayerTable[ indexForSecondTable ].innerText = firstPlayerTable[ row ][ ceil ].value * -1;
+      indexForSecondTable++;
     }
-    skip += +secondPlayerStrategies.value;
   }
   findBtn.style.display = 'block';
 }
@@ -39,7 +39,7 @@ function createTables ( firstPlayerStrategies, secondPlayerStrategies ) {
   tableOfFirstPlayer.appendChild( header1 );
   tableOfSecondPlayer.appendChild( header2 );
   for ( let i = 0; i < secondPlayerStrategies; i++ ) {
-    createRow( i, tableOfFirstPlayer, tableOfSecondPlayer, secondPlayerStrategies );
+    createRow( i, tableOfFirstPlayer, tableOfSecondPlayer, firstPlayerStrategies );
   }
   let h4_1 = doc.createElement( 'h4' ),
       h4_2 = doc.createElement( 'h4' );
@@ -70,12 +70,12 @@ function resetTable () {
   valueSet = false;
   firstPlayerTable.forEach( row => {
     row.forEach( ceil => {
-      ceil.html.removeAttribute('class');
+      ceil.html.removeAttribute( 'class' );
     } );
   } );
-  secondPlayerTable.forEach(ceil => {
-    ceil.removeAttribute('class');
-  });
+  secondPlayerTable.forEach( ceil => {
+    ceil.removeAttribute( 'class' );
+  } );
 }
 
 // Generate user settings field

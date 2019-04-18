@@ -2,22 +2,22 @@
  * @vars are stable
  */
 const
-  doc                     = document,
-  firstPlayersStrategies  = doc.querySelector( '#firstPlayersStrategies' ),
+  doc                    = document,
+  firstPlayersStrategies = doc.querySelector( '#firstPlayersStrategies' ),
   secondPlayerStrategies = doc.querySelector( '#secondPlayerStrategies' ),
-  generateBtn             = doc.querySelector( '#generate' ),
-  fillBtn                 = doc.querySelector( '#fill' ),
-  minmaxBlockSection      = doc.querySelector( '#minmaxBlockSection' ),
-  findBtn                 = doc.querySelector( '#find' ),
-  maxminBlock             = doc.querySelector( '#maxminBlock' ),
-  minmaxBlock             = doc.querySelector( '#minmaxBlock' ),
-  saddlePoint             = doc.querySelector( '#saddlePoint' ),
-  tableBlock1             = doc.querySelector( '#table1' ),
-  tableBlock2             = doc.querySelector( '#table2' ),
-  max1                    = doc.querySelector( '#max1' ),
-  max2                    = doc.querySelector( '#max2' ),
-  container1              = doc.querySelector( '#container1' ),
-  container2              = doc.querySelector( '#container2' );
+  generateBtn            = doc.querySelector( '#generate' ),
+  fillBtn                = doc.querySelector( '#fill' ),
+  minmaxBlockSection     = doc.querySelector( '#minmaxBlockSection' ),
+  findBtn                = doc.querySelector( '#find' ),
+  maxminBlock            = doc.querySelector( '#maxminBlock' ),
+  minmaxBlock            = doc.querySelector( '#minmaxBlock' ),
+  saddlePoint            = doc.querySelector( '#saddlePoint' ),
+  tableBlock1            = doc.querySelector( '#table1' ),
+  tableBlock2            = doc.querySelector( '#table2' ),
+  max1                   = doc.querySelector( '#max1' ),
+  max2                   = doc.querySelector( '#max2' ),
+  container1             = doc.querySelector( '#container1' ),
+  container2             = doc.querySelector( '#container2' );
 
 /**
  * @vars are dynamic
@@ -45,8 +45,14 @@ document.addEventListener( 'click', function ( e ) {
 
 // Button that generate table
 generateBtn.addEventListener( 'click', function () {
-  resetTable();
-  settingGamingField();
+  try {
+    if ( +firstPlayersStrategies.value > 0 && +firstPlayersStrategies.value < 11 && +secondPlayerStrategies.value > 0 && +secondPlayerStrategies.value < 11 ) {
+      resetTable();
+      settingGamingField();
+    }
+  } catch ( e ) {
+    console.log( e.message );
+  }
 } );
 
 // Button that responds for filling table's values
@@ -98,7 +104,7 @@ findBtn.addEventListener( 'click', function () {
       }
     }
   } );
-  saddlePoint.innerText = maxmin * -1 === minmax
+  saddlePoint.innerText = maxmin === minmax
                           ? minmax
                           : 'Відсутня';
   finished = true;
