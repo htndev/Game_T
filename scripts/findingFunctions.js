@@ -2,7 +2,9 @@
 function findFirstPlayerColMax ( index, maxVal ) {
   let tmpArr = []; // Array, which contains ceil in current column
   for ( let i = 0; i < maxVal; i++ ) {
-    tmpArr.push( firstPlayerTable[ i ][ index ] );
+    if ( firstPlayerTable[ i ][ index ] !== undefined ) {
+      tmpArr.push( firstPlayerTable[ i ][ index ] );
+    }
   }
   let max      = -1000,
       maxes    = [],
@@ -27,7 +29,7 @@ function findFirstPlayerColMax ( index, maxVal ) {
 }
 
 function getPlayerOneStrategy () {
-  for ( let row = 0; row < +secondPlayerStrategies.value; row++ ) {
+  for ( let row = 0; row < +firstPlayersStrategies.value; row++ ) {
     findFirstPlayerColMax( row, +firstPlayersStrategies.value );
   }
 }
@@ -37,27 +39,45 @@ function findSecondPlayerRowMax ( row, index ) {
   let min        = 1000,
       minIndexes = [];
   for ( let ceil = 0; ceil < row.length; ceil++ ) {
-    if ( row[ ceil ].value === min ) {
-      minIndexes.push( ceil );
+    if ( row[ ceil ] === min ) {
+      minIndexes.push( row[ ceil ] );
     } else if ( row[ ceil ].value < min ) {
       min = row[ ceil ].value;
       minIndexes = [];
-      minIndexes.push( ceil );
+      minIndexes.push( row[ ceil ] );
     }
   }
-  max2.innerHTML += `<p>${ index + 1 }. Š<sub>B</sub>(A<sub>${ index + 1 }</sub>) = B<sub>${ minIndexes[ 0 ] + 1 }</sub>; Ŭ<sub>B</sub>(A<sub>${ index + 1 }</sub>) = ${ min * -1 }</p>`;
-  if ( maxmin < min * -1 ) {
-    maxmin = min * -1;
-  }
-  minIndexes.forEach( ind => {
-    index === 0
-    ? secondPlayerTable[ ind ].classList.add( 'checked' )
-    : secondPlayerTable[ ind + ( +secondPlayerStrategies.value * index ) ].classList.add( 'checked' );
+  max2.innerHTML += `<p>${ index + 1 }. Š<sub>B</sub>(A<sub>${ index + 1 }</sub>) = B<sub>${ minIndexes[ 0 ].value + 1 }</sub>; Ŭ<sub>B</sub>(A<sub>${ index + 1 }</sub>) = ${ min }</p>`;
+  minIndexes.forEach( element => {
+    element.element.classList.add( 'checked' );
   } );
+
+  if ( maxmin < min ) { maxmin = min; }
 }
 
 function getPlayerTwoStrategy () {
-  firstPlayerTable.forEach( ( row, index ) => {
+  let tmpEvery = [];
+  secondPlayerTable.forEach( ( element, index ) => {
+    tmpEvery[ index ] = element;
+  } );
+  for ( let i = 0; i < tmpEvery.length; i++ ) {
+    secondPlayerTable[ i ] = {
+      element: tmpEvery[ i ],
+      value  : +tmpEvery[ i ].innerText
+    };
+  }
+  let tmp = [],
+      k   = 0;
+  for ( let i = 0; i < +secondPlayerStrategies.value; i++ ) {
+    let arr = [];
+    for ( let j = 0; j < +firstPlayersStrategies.value; j++ ) {
+      arr.push( secondPlayerTable[ k ] );
+      k++;
+    }
+    tmp.push( arr );
+  }
+  secondPlayerTable = tmp;
+  secondPlayerTable.forEach( ( row, index ) => {
     findSecondPlayerRowMax( row, index );
   } );
 }

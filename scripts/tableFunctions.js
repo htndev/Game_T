@@ -73,8 +73,15 @@ function resetTable () {
       ceil.html.removeAttribute( 'class' );
     } );
   } );
-  secondPlayerTable.forEach( ceil => {
-    ceil.removeAttribute( 'class' );
+  secondPlayerTable.forEach( row => {
+    if(row.nodeName === 'TD'){
+      row.removeAttribute('class');
+    }
+    else {
+      row.forEach( ceil => {
+        ceil.element.removeAttribute( 'class' );
+    } );
+    }
   } );
 }
 

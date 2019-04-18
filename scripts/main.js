@@ -27,7 +27,7 @@ let
   tableOfFirstPlayer,
   tableOfSecondPlayer,
   secondPlayerTable = [],
-  maxmin            = -1000,
+  maxmin            = 1000,
   minmax            = 1000,
   valueSet          = false,
   finished          = false;
@@ -45,6 +45,10 @@ document.addEventListener( 'click', function ( e ) {
 
 // Button that generate table
 generateBtn.addEventListener( 'click', function () {
+  if ( +firstPlayersStrategies.value > 0 && +firstPlayersStrategies.value < 11 && +secondPlayerStrategies.value > 0 && +secondPlayerStrategies.value < 11 ) {
+    resetTable();
+    settingGamingField();
+  }
   try {
     if ( +firstPlayersStrategies.value > 0 && +firstPlayersStrategies.value < 11 && +secondPlayerStrategies.value > 0 && +secondPlayerStrategies.value < 11 ) {
       resetTable();
@@ -64,48 +68,52 @@ fillBtn.addEventListener( 'click', function () {
 
 // Button that responds for finding values in table
 findBtn.addEventListener( 'click', function () {
-  max1.innerHTML = '';
-  max2.innerHTML = '';
-  maxminBlock.innerHTML = '';
-  minmaxBlock.innerHTML = '';
-  saddlePoint.innerHTML = '';
-  // Finding first player's strategies
-  getPlayerOneStrategy();
-  // Finding second player's strategies
-  getPlayerTwoStrategy();
-  minmaxBlock.innerText = minmax;
-  maxminBlock.innerText = maxmin;
-  // Setting correct or wrong flags of user
-  firstPlayerTable.forEach( row => {
-    row.forEach( ceil => {
-      if ( ceil.html.classList.contains( 'guessed' ) ) {
-        if ( ceil.html.classList.contains( 'checked' ) ) {
-          ceil.html.classList.remove( 'checked' );
-          ceil.html.classList.remove( 'guessed' );
-          ceil.html.classList.add( 'correct' );
-        } else {
-          ceil.html.classList.remove( 'checked' );
-          ceil.html.classList.remove( 'guessed' );
-          ceil.html.classList.add( 'wrong' );
+  if ( !finished ) {
+    max1.innerHTML = '';
+    max2.innerHTML = '';
+    maxminBlock.innerHTML = '';
+    minmaxBlock.innerHTML = '';
+    saddlePoint.innerHTML = '';
+    // Finding first player's strategies
+    getPlayerOneStrategy();
+    // Finding second player's strategies
+    getPlayerTwoStrategy();
+    minmaxBlock.innerText = minmax;
+    maxminBlock.innerText = maxmin;
+    // Setting correct or wrong flags of user
+    firstPlayerTable.forEach( row => {
+      row.forEach( ceil => {
+        if ( ceil.html.classList.contains( 'guessed' ) ) {
+          if ( ceil.html.classList.contains( 'checked' ) ) {
+            ceil.html.classList.remove( 'checked' );
+            ceil.html.classList.remove( 'guessed' );
+            ceil.html.classList.add( 'correct' );
+          } else {
+            ceil.html.classList.remove( 'checked' );
+            ceil.html.classList.remove( 'guessed' );
+            ceil.html.classList.add( 'wrong' );
+          }
         }
-      }
+      } );
     } );
-  } );
-  secondPlayerTable.forEach( ceil => {
-    if ( ceil.classList.contains( 'guessed' ) ) {
-      if ( ceil.classList.contains( 'checked' ) ) {
-        ceil.classList.remove( 'checked' );
-        ceil.classList.remove( 'guessed' );
-        ceil.classList.add( 'correct' );
-      } else {
-        ceil.classList.remove( 'checked' );
-        ceil.classList.remove( 'guessed' );
-        ceil.classList.add( 'wrong' );
-      }
-    }
-  } );
-  saddlePoint.innerText = maxmin === minmax
-                          ? minmax
-                          : 'Відсутня';
-  finished = true;
+    secondPlayerTable.forEach( row => {
+      row.forEach( ceil => {
+        if ( ceil.element.classList.contains( 'guessed' ) ) {
+          if ( ceil.element.classList.contains( 'checked' ) ) {
+            ceil.element.classList.remove( 'checked' );
+            ceil.element.classList.remove( 'guessed' );
+            ceil.element.classList.add( 'correct' );
+          } else {
+            ceil.element.classList.remove( 'checked' );
+            ceil.element.classList.remove( 'guessed' );
+            ceil.element.classList.add( 'wrong' );
+          }
+        }
+      } );
+    } );
+    saddlePoint.innerText = maxmin === minmax
+                            ? minmax
+                            : 'Відсутня';
+    finished = true;
+  }
 } );
