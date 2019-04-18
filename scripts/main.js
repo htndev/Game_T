@@ -33,7 +33,7 @@ let
   finished          = false;
 
 // Function that set bg to the ceil in firstPlayerTable
-document.body.addEventListener( 'click', function ( e ) {
+document.addEventListener( 'click', function ( e ) {
   // Checking if it's a playing firstPlayerTable
   if ( e.target.tagName === 'TD' && e.path[ 2 ].nodeName === 'TABLE' ) {
     // Checking if values are set and game not finished
