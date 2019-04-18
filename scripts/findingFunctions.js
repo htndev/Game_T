@@ -18,7 +18,7 @@ function findFirstPlayerColMax ( index, maxVal ) {
     }
   }
   max1.innerHTML += `<p>${ index + 1 }. Š<sub>A</sub>(B<sub>${ index + 1 }</sub>) = A<sub>${ maxIndex + 1 }</sub>; Ŭ<sub>A</sub>(B<sub>${ index + 1 }</sub>) = ${ max }</p>`;
-  if(minmax > max){
+  if ( minmax > max ) {
     minmax = max;
   }
   maxes.forEach( ceil => {
@@ -46,9 +46,11 @@ function findSecondPlayerRowMax ( row, index ) {
     }
   }
   max2.innerHTML += `<p>${ index + 1 }. Š<sub>B</sub>(A<sub>${ index + 1 }</sub>) = B<sub>${ minIndexes[ 0 ] + 1 }</sub>; Ŭ<sub>B</sub>(A<sub>${ index + 1 }</sub>) = ${ min * -1 }</p>`;
-  if(maxmin < min){
-    maxmin = min;
+  console.log( min );
+  if ( maxmin < min * -1 ) {
+    maxmin = min * -1;
   }
+  console.log( min );
   minIndexes.forEach( ind => {
     index === 0
     ? secondPlayerTable[ ind ].classList.add( 'checked' )

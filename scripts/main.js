@@ -67,8 +67,8 @@ findBtn.addEventListener( 'click', function () {
   getPlayerOneStrategy();
   // Finding second player's strategies
   getPlayerTwoStrategy();
-  maxminBlock.innerText = maxmin * -1;
   minmaxBlock.innerText = minmax;
+  maxminBlock.innerText = maxmin;
   // Setting correct or wrong flags of user
   firstPlayerTable.forEach( row => {
     row.forEach( ceil => {
