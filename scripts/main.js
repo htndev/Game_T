@@ -58,11 +58,16 @@ fillBtn.addEventListener( 'click', function () {
 
 // Button that responds for finding values in table
 findBtn.addEventListener( 'click', function () {
+  max1.innerHTML = '';
+  max2.innerHTML = '';
+  maxminBlock.innerHTML = '';
+  minmaxBlock.innerHTML = '';
+  saddlePoint.innerHTML = '';
   // Finding first player's strategies
   getPlayerOneStrategy();
   // Finding second player's strategies
   getPlayerTwoStrategy();
-  maxminBlock.innerText = maxmin;
+  maxminBlock.innerText = maxmin * -1;
   minmaxBlock.innerText = minmax;
   // Setting correct or wrong flags of user
   firstPlayerTable.forEach( row => {
@@ -93,8 +98,8 @@ findBtn.addEventListener( 'click', function () {
       }
     }
   } );
-  saddlePoint.innerText = maxmin === minmax
-                          ? maxmin
+  saddlePoint.innerText = maxmin * -1 === minmax
+                          ? minmax
                           : 'Відсутня';
   finished = true;
 } );

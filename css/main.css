@@ -28,7 +28,6 @@ body #max1 p, body #max2 p {
 }
 body #find {
   display: none;
-  width: 23%;
   margin: 1rem auto 0;
 }
 body .checks {

@@ -18,11 +18,12 @@ function findFirstPlayerColMax ( index, maxVal ) {
     }
   }
   max1.innerHTML += `<p>${ index + 1 }. Š<sub>A</sub>(B<sub>${ index + 1 }</sub>) = A<sub>${ maxIndex + 1 }</sub>; Ŭ<sub>A</sub>(B<sub>${ index + 1 }</sub>) = ${ max }</p>`;
-  minmax = max;
+  if(minmax > max){
+    minmax = max;
+  }
   maxes.forEach( ceil => {
     ceil.html.classList.add( 'checked' );
   } );
-  max1.innerHTML += `<p></p>`;
 }
 
 function getPlayerOneStrategy () {
@@ -44,8 +45,10 @@ function findSecondPlayerRowMax ( row, index ) {
       minIndexes.push( ceil );
     }
   }
-  max2.innerHTML += `<p>${ index + 1 }. Š<sub>B</sub>(A<sub>${ index + 1 }</sub>) = B<sub>${ minIndexes[ 0 ] + 1 }</sub>; Ŭ<sub>B</sub>(A<sub>${ index + 1 }</sub>) = ${ min }</p>`;
-  maxmin = min;
+  max2.innerHTML += `<p>${ index + 1 }. Š<sub>B</sub>(A<sub>${ index + 1 }</sub>) = B<sub>${ minIndexes[ 0 ] + 1 }</sub>; Ŭ<sub>B</sub>(A<sub>${ index + 1 }</sub>) = ${ min * -1 }</p>`;
+  if(maxmin < min){
+    maxmin = min;
+  }
   minIndexes.forEach( ind => {
     index === 0
     ? secondPlayerTable[ ind ].classList.add( 'checked' )
