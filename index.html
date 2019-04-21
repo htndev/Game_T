@@ -4,119 +4,197 @@
   <meta charset="UTF-8">
   <meta content="width=device-width, initial-scale=1" name="viewport">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
-  <link href="./css/main.css" rel="stylesheet">
   <title>Game Theory</title>
-  <link rel="icon" href="logo.ico">
+  <link href="logo.ico" rel="icon">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
   <script defer src="scripts/main.js"></script>
   <script defer src="scripts/findingFunctions.js"></script>
   <script defer src="scripts/tableFunctions.js"></script>
+  <link href="./css/main.css" rel="stylesheet">
 </head>
 <body>
-  <h1 class="center-align">Лабораторна робота №3</h1>
+  <h1 class="center-align">Виключення домінованих стратегій</h1>
   <p class="center-align flow-text">Гра з нульовою суммою</p>
   <h3 class="center-align">Введіть кількість стратегій:</h3>
-  <div class="main__row">
-    <div class="col s8 center-align main">
-      <div class="boxes">
-        <div class="col s4 box">
-          <div class="col s2">
-            <h4>Гравець 1</h4>
-            <div class="col s1">
-              <input id="firstPlayersStrategies" max="10" min="1" type="number" value="3">
+  <div class="container">
+    <div class="row center-align">
+      <!-- ГРАВЦІ -->
+      <div class="col s12 m6">
+        <div class="col s6 m6">
+          <div class="row center-align">
+            <div class="row">
+              <div class="col s10">
+                <label for="firstPlayerStrategies"><h5>Гравець 1: </h5></label>
+              </div>
+            </div>
+            <div class="row center-align">
+              <div class="col s10 offset-s1">
+              <input id="firstPlayerStrategies" max="10"
+                     min="1" placeholder="E.g, 3..."
+                     type="number"
+                     value="3">
+            </div>
             </div>
           </div>
         </div>
-        <div class="col s4 box">
-          <div class="col s2">
-            <h4>Гравець 2</h4>
-            <div class="col s1">
-              <input id="secondPlayerStrategies" max="10" min="1" type="number" value="3">
+        <div class="col s6 m6">
+          <div class="row center-align">
+            <div class="row">
+              <div class="col s10">
+                <label for="secondPlayerStrategies"><h5>Гравець 2: </h5></label>
+              </div>
+            </div>
+            <div class="row center-align">
+              <div class="col s10 offset-s1">
+                <input id="secondPlayerStrategies" max="10"
+                       min="1" placeholder="E.g, 3..."
+                       type="number"
+                       value="3">
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      <a class="waves-effect waves-light btn purple darken-1" id="generate">Згенерувати</a>
-    </div>
-    <div class="col s8 center-align main" id="minmaxBlockSection">
-      <div class="boxes">
-        <div class="col s4 box">
-        <div class="col s2">
-          <h4>Від</h4>
-          <div class="col s1">
-            <label for="min"><input id="min" max="100" min="-100" type="number" value="-9"></label>
+        <div class="row center-align">
+          <div class="col s10 offset-s1">
+            <a class="waves-effect waves-light btn purple darken-1" id="generate">Згенерувати</a>
           </div>
         </div>
       </div>
-      <div class="col s4 box">
-        <div class="col s2">
-          <h4>До</h4>
-          <div class="col s1">
-            <label for="max"><input id="max" max="100" min="-100" type="number" value="9"></label>
+	    <!-- ГЕНЕРАЦІЯ -->
+      <div class="col s12 m6" id="generationSection">
+        <div class="row">
+          <div class="col s6 m5 offset-m2">
+            <div class="row">
+              <div class="col s10 center-align">
+                <label for="minValue"><h5>Від</h5></label>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col s10 offset-s1">
+                <input id="minValue" max="100" min="-100" placeholder="Min value" type="number" value="-9">
+              </div>
+            </div>
+          </div>
+          <div class="col s6 m5">
+            <div class="row center-align">
+          <div class="col s12">
+            <label for="maxValue"><h5>До</h5></label>
           </div>
         </div>
-      </div>
-    </div>
+            <div class="row">
+              <div class="col s10 offset-s1 offset-m1">
+                <input id="maxValue" max="100" min="-100" placeholder="Max value" type="number" value="9">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row center-align">
       <a class="waves-effect waves-light btn pink darken-3" id="fill">Рандомні платежі</a>
     </div>
-  </div>
-  <div class="checks">
-    <label>
-      <input id="showFirst" type="checkbox"/>
-      <span>Показати першого гравця</span>
-    </label>
-    <label>
-      <input id="showSecond" type="checkbox"/>
-      <span>Показати другого гравця</span>
-    </label>
-  </div>
-  <div class="container">
-    <div class="row">
-      <div class="container col s12 m6">
-        <div id="table1"></div>
-      </div>
-      <div class="container col s12 m6">
-        <div id="table2"></div>
       </div>
     </div>
   </div>
-  <div class="container">
+  <div class="container" id="functions">
     <div class="row">
-      <div class="col s12 m4 offset-m4">
-        <a class="waves-effect waves-light btn pink accent-1" id="find">Визначити функції реакції</a>
+      <div class="col s12">
+        <ul class="tabs">
+          <li class="tab col s3"><a class="active" href="#gameMatrix" id="gm">Матриця гри</a></li>
+          <li class="tab col s3"><a href="#simplify" id="sf">Спростити власноруч</a></li>
+          <li class="tab col s2"><a href="#reactionGame" id="fr">Функція реакції</a></li>
+          <li class="tab col s2"><a href="#gamePrice" id="gp">Ціна гри</a></li>
+          <li class="tab col s2"><a href="#graphic" id="gc">Графічно</a></li>
+        </ul>
+      </div>
+      <div class="col s12" id="gameMatrix">
+        <div class="container">
+          <div class="row center-align">
+            <h4>Початкова таблиця</h4>
+          </div>
+          <div class="row center-align">
+            <table id="startTable"></table>
+          </div>
+          <div class="row center-align">
+            <div class="col s12">
+              <a class="waves-effect waves-light btn pink darken-3" id="simplifyGame">Спростити гру</a>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col s12 m12" id="simplified">
+
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col s12" id="simplify">
+        Simplify game
+      </div>
+      <div class="col s12" id="reactionGame">
+        <div class="row">
+          <div class="col s12">
+            <div class="row center-align">
+              <h4>Гравець 1</h4>
+            </div>
+            <div class="row" id="tableFirstPlayer"></div>
+          </div>
+          <div class="col s12">
+            <div class="row center-align">
+              <div class="col s12">
+                <label>
+                  <input class="filled-in" id="showSecondPlayer" type="checkbox">
+                  <span>Показати другого гравця</span>
+                </label>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col s12" id="playerTwoField">
+                <div class="row center-align">
+                  <h4>Гравець 2</h4>
+                </div>
+                <div class="row" id="tableSecondPlayer"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row center-align">
+          <div class="col s12">
+            <a class="waves-effect waves-light btn pink darken-3" id="getFR">Визначити функції реакції</a>
+          </div>
+        </div>
+        <div class="row center-align">
+          <div class="col s12 m8 offset-m2" id="firstPlayerMaxes">
+            <div class="row"><h4>Гравець 1</h4></div>
+            <div class="card-panel deep-purple lighten-3"></div>
+          </div>
+          <div class="col s12 m8 offset-m2" id="secondPlayerMaxes">
+            <div class="row">
+              <h4>Гравець 2</h4>
+            </div>
+            <div class="card-panel deep-purple lighten-3"></div>
+          </div>
+        </div>
+      </div>
+      <div class="col s12" id="gamePrice">
+        <div class="row">
+          <div class="col s12">
+            <div class="row center-align">
+              <h4>Ціна гри</h4>
+            </div>
+            <div id="gamePricePlace"></div>
+          </div>
+        </div>
+        <div class="row center-align">
+          <div class="col s12">
+            <a class="waves-effect waves-light btn blue darken-1" id="findMinMax">Знайти ціну гри</a>
+          </div>
+        </div>
+      </div>
+      <div class="col s12" id="graphic">
+        graphic
       </div>
     </div>
   </div>
-  <div class="container">
-    <div class="row">
-      <div class="container col s12 m6" id="container1">
-        <h3 class="center-align">Гравець 1</h3>
-        <div class="z-depth-3 center-align" id="max1"></div>
-      </div>
-      <div class="container col s12 m6" id="container2">
-        <h3 class="center-align">Гравець 2</h3>
-        <div class="z-depth-3 center-align" id="max2"></div>
-      </div>
-    </div>
-  </div>
-  <div class="container">
-    <table>
-      <thead>
-        <tr>
-          <th>minmax</th>
-          <th>maxmin</th>
-          <th>Сідлова точка</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td id="minmaxBlock"></td>
-          <td id="maxminBlock"></td>
-          <td id="saddlePoint"></td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+  <!-- ФУТЕР -->
   <div class="container">
     <footer>
       <div class="row">
@@ -125,7 +203,7 @@
       <div class="row">
         <h3><a href="https://github.com/htnpro/Game_T">GITHUB</a></h3>
       </div>
-  </footer>
+    </footer>
   </div>
 </body>
 </html>

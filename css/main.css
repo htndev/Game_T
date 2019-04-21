@@ -14,81 +14,81 @@
 body {
   background: #eee;
 }
-body #container1, body #container2 {
+body #generationSection {
   display: none;
 }
-body #max1, body #max2 {
-  background: #74b9ff;
+body #functions {
+  display: none;
+}
+body #playerTwoField {
+  display: none;
+}
+body #secondPlayerMaxes {
+  display: none;
+}
+body table {
+  border: none;
+  width: auto;
+  margin: 0 auto;
+}
+body table tr {
+  border: none;
+}
+body table tr:not(:last-child) {
+  border-bottom: 1px solid #535c68;
+}
+body table tr td, body table tr th {
+  padding: 0.7rem;
+}
+body table tr td:last-child, body table tr th:last-child {
+  border-right: none;
+}
+body table thead th {
+  border-bottom: 1px solid #535c68;
+}
+body table thead th:not(:first-child) {
+  border-left: 1px solid #535c68;
+}
+body table tbody th, body table tfoot th {
+  border-bottom: none;
+  border-right: 1px solid #535c68;
+}
+body table tbody td:not(:last-child), body table tfoot td:not(:last-child) {
+  border-right: 1px solid #535c68;
+}
+body table th {
+  text-align: center;
+}
+body table tfoot tr {
+  border-top: 1px solid #535c68;
+  border-bottom: none;
+}
+body table td input, body table th input {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  border: none;
+  outline: none;
+  text-align: center;
+  background: #f5f6fa;
+  margin: 0 auto;
+  display: block;
   padding: 0.5rem;
-  border-radius: 0.3rem;
-  margin: 0 auto 1rem;
+  border-radius: 0.5rem;
+  width: 3rem;
+  -webkit-box-shadow: 0 0 0 0.2rem #bdc3c7;
+          box-shadow: 0 0 0 0.2rem #bdc3c7;
 }
-body #max1 p, body #max2 p {
-  font-size: 1.5em;
+body table td input[disabled], body table th input[disabled] {
+  cursor: pointer;
+  background: #ced6e0;
 }
-body #find {
-  display: none;
-  margin: 1rem auto 0;
-}
-body .checks {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  width: 100%;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
-}
-body .checks label {
-  margin: 1rem;
-}
-body h1 {
-  margin-top: 1rem;
-}
-body .main__row {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
-  width: 100%;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-}
-body .main__row .main {
-  margin: 0.3rem;
-  width: 25rem;
-  height: 100%;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
-}
-body .main__row .main:last-child {
-  display: none;
-}
-body .main__row .main .boxes {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
-}
-body .main__row .main .boxes .box {
-  margin: 0.5rem;
+body table td input:focus, body table th input:focus {
+  background: #dff9fb;
+  -webkit-transition: 0.3s;
+  transition: 0.3s;
+  -webkit-box-shadow: 0 0 0 0.2rem rgba(255, 121, 121, 0.4);
+          box-shadow: 0 0 0 0.2rem rgba(255, 121, 121, 0.4);
 }
 body .checked {
   background: #a29bfe;
@@ -101,26 +101,6 @@ body .correct {
 }
 body .wrong {
   background: #ff7979;
-}
-body table {
-  padding: 1rem;
-  border: 1px solid crimson;
-  margin: 0 auto;
-  margin-top: 2rem;
-  margin-bottom: 1rem;
-}
-body table tr {
-  max-width: 5rem;
-  width: 5rem;
-}
-body table tr td, body table tr th {
-  width: 2rem;
-  font-size: 1.2em;
-  height: 2rem;
-  text-align: center;
-}
-body table tr td {
-  cursor: pointer;
 }
 body footer {
   margin-top: 4rem;

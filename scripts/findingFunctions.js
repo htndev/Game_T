@@ -1,83 +1,119 @@
-// A Player
-function findFirstPlayerColMax ( index, maxVal ) {
-  let tmpArr = []; // Array, which contains ceil in current column
-  for ( let i = 0; i < maxVal; i++ ) {
-    if ( firstPlayerTable[ i ][ index ] !== undefined ) {
-      tmpArr.push( firstPlayerTable[ i ][ index ] );
+function generateValue ( min, max ) {
+  return Math.floor( Math.random() * ( max - min ) + min );
+}
+
+function getTableInArray ( table ) {
+  let arrayOfTD = [],
+      tableRows = nodeListToArray( table.querySelector( 'tbody' )
+                                        .querySelectorAll( 'tr' ) );
+  tableRows.forEach( element => {
+    let tr = [];
+    for ( let i = 0; i < element.children.length; i++ ) {
+      if ( element.children[ i ].nodeName === 'TD' ) {
+        tr.push( element.children[ i ] );
+      }
     }
-  }
-  let max      = -1000,
-      maxes    = [],
-      maxIndex = 0;
-  for ( let i = 0; i < tmpArr.length; i++ ) {
-    if ( tmpArr[ i ].value === max ) {
-      maxes.push( tmpArr[ i ] );
-    } else if ( tmpArr[ i ].value > max ) {
-      maxIndex = i;
-      max = tmpArr[ i ].value;
-      maxes = [];
-      maxes.push( tmpArr[ i ] );
-    }
-  }
-  max1.innerHTML += `<p>${ index + 1 }. Š<sub>A</sub>(B<sub>${ index + 1 }</sub>) = A<sub>${ maxIndex + 1 }</sub>; Ŭ<sub>A</sub>(B<sub>${ index + 1 }</sub>) = ${ max }</p>`;
-  if ( minmax > max ) {
-    minmax = max;
-  }
-  maxes.forEach( ceil => {
-    ceil.html.classList.add( 'checked' );
+    arrayOfTD.push( tr );
   } );
+  return arrayOfTD;
 }
 
-function getPlayerOneStrategy () {
-  for ( let row = 0; row < +firstPlayersStrategies.value; row++ ) {
-    findFirstPlayerColMax( row, +firstPlayersStrategies.value );
-  }
+function getInputsInTableArray ( table ) {
+  let arrayOfInputs = [];
+  table.forEach( element => {
+    let inputRow = [];
+    element.forEach( td => {
+      inputRow.push( td.children[ 0 ] );
+    } );
+    arrayOfInputs.push( inputRow );
+  } );
+  return arrayOfInputs;
 }
 
-// B Player
-function findSecondPlayerRowMax ( row, index ) {
-  let min        = 1000,
-      minIndexes = [];
+function getValuesFromInputArray ( inputArray ) {
+  let valuesArray = [];
+  inputArray.forEach( row => {
+    let tmpArr = [];
+    row.forEach( ceil => {
+      tmpArr.push( ceil.value );
+    } );
+    valuesArray.push( tmpArr );
+  } );
+  return valuesArray;
+}
+
+function createAliasTable ( mainTable, place ) {
+  let table = document.createElement( 'table' );
+  table.innerHTML = mainTable.innerHTML;
+  place.appendChild( table );
+  return table;
+}
+
+function nodeListToArray ( nodeList ) {
+  return Array.prototype.slice.call( nodeList );
+}
+
+function findColMax ( row, index ) {
+  findMaxes( row, index, firstPlayerMaxes.children[ 1 ], 'B', 'A' );
+}
+
+function findRowMax ( row, index ) {
+  findMaxes( row, index, secondPlayerMaxes.children[ 1 ], 'A', 'B' );
+}
+
+function findMaxes ( row, index, placeForStrategies, rowLetter, colLetter ) {
+  let maxCeils   = [],
+      maxIndexes = [],
+      max        = -1000;
   for ( let ceil = 0; ceil < row.length; ceil++ ) {
-    if ( row[ ceil ] === min ) {
-      minIndexes.push( row[ ceil ] );
-    } else if ( row[ ceil ].value < min ) {
-      min = row[ ceil ].value;
-      minIndexes = [];
-      minIndexes.push( row[ ceil ] );
+    if ( +row[ ceil ].value === max ) {
+      maxIndexes.push( ceil );
+      maxCeils.push( row[ ceil ] );
+    } else if ( +row[ ceil ].value > max ) {
+      max = +row[ ceil ].value;
+      maxCeils = [];
+      maxIndexes = [];
+      maxIndexes.push( ceil );
+      maxCeils.push( row[ ceil ] );
     }
   }
-  max2.innerHTML += `<p>${ index + 1 }. Š<sub>B</sub>(A<sub>${ index + 1 }</sub>) = B<sub>${ minIndexes[ 0 ].value + 1 }</sub>; Ŭ<sub>B</sub>(A<sub>${ index + 1 }</sub>) = ${ min }</p>`;
-  minIndexes.forEach( element => {
-    element.element.classList.add( 'checked' );
+  let str = '';
+  maxIndexes.forEach( ( element, index ) => {
+    str += `${ colLetter }<sub>${ element + 1 }</sub>${ index !== maxIndexes.length - 1
+                                                        ? ', '
+                                                        : '' }`;
   } );
-
-  if ( maxmin < min ) { maxmin = min; }
+  placeForStrategies.innerHTML += `<p>${ index + 1 }. š<sub>${ colLetter }</sub>(${ rowLetter }<sub>${ index + 1 }</sub>) = ${ maxIndexes.length > 1
+                                                                                                                               ? `{ ${ str } }`
+                                                                                                                               : str }; Û<sub>${ rowLetter }</sub>(${ colLetter }<sub>${ index + 1 }</sub>) = ${ maxCeils[ 0 ].value }</p>`;
+  maxCeils.forEach( element => {
+    element.parentNode.classList.add( 'checked' );
+  } );
 }
 
-function getPlayerTwoStrategy () {
-  let tmpEvery = [];
-  secondPlayerTable.forEach( ( element, index ) => {
-    tmpEvery[ index ] = element;
-  } );
-  for ( let i = 0; i < tmpEvery.length; i++ ) {
-    secondPlayerTable[ i ] = {
-      element: tmpEvery[ i ],
-      value  : +tmpEvery[ i ].innerText
-    };
-  }
-  let tmp = [],
-      k   = 0;
-  for ( let i = 0; i < +secondPlayerStrategies.value; i++ ) {
-    let arr = [];
-    for ( let j = 0; j < +firstPlayersStrategies.value; j++ ) {
-      arr.push( secondPlayerTable[ k ] );
-      k++;
+function toMatrix () {
+  let evt = document.createEvent( 'MouseEvents' );
+  evt.initMouseEvent( 'click', true, true, window,
+    0, 0, 0, 0, 0, false, false, false, false, 0, null );
+  gameMatrixTab.dispatchEvent( evt ); // element for click
+}
+
+function findRowPrice ( row ) {
+  let min = 1000;
+  for ( let ceil = 0; ceil < row.length; ceil++ ) {
+    if ( +row[ ceil ].children[ 0 ].value < min ) {
+      min = +row[ ceil ].children[ 0 ].value;
     }
-    tmp.push( arr );
   }
-  secondPlayerTable = tmp;
-  secondPlayerTable.forEach( ( row, index ) => {
-    findSecondPlayerRowMax( row, index );
-  } );
+  return min;
+}
+
+function findColPrice ( col ) {
+  let max = -1000;
+  for ( let ceil = 0; ceil < col.length; ceil++ ) {
+    if ( +col[ ceil ].children[ 0 ].value > max ) {
+      max = +col[ ceil ].children[ 0 ].value;
+    }
+  }
+  return max;
 }
