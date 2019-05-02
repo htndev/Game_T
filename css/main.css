@@ -90,6 +90,14 @@ body table td input:focus, body table th input:focus {
   -webkit-box-shadow: 0 0 0 0.2rem rgba(255, 121, 121, 0.4);
           box-shadow: 0 0 0 0.2rem rgba(255, 121, 121, 0.4);
 }
+body .combination {
+  margin-top: 1rem;
+}
+body .key {
+  padding: 0.3rem 0.5rem;
+  background: #b2bec3;
+  border: 3px solid #000;
+}
 body .checked {
   background: #a29bfe;
 }
@@ -106,4 +114,60 @@ body footer {
   margin-top: 4rem;
   padding: 1rem;
   text-align: center;
+}
+body #crop {
+  position: fixed;
+  left: 1rem;
+  bottom: 1rem;
+}
+body #cleanYourSelf {
+  position: fixed;
+  left: 5rem;
+  bottom: 1rem;
+}
+body #sfBack {
+  position: fixed;
+  bottom: 1rem;
+  left: 9rem;
+}
+body #sfForward {
+  position: fixed;
+  bottom: 1rem;
+  left: 13rem;
+}
+body .cursor-crop-down {
+  cursor: s-resize;
+}
+body .cursor-crop-left {
+  cursor: e-resize;
+}
+body .selected {
+  background: #fab1a0;
+}
+body .target {
+  background: #e17055;
+}
+body .crop-target-selected {
+  background: #d63031;
+}
+body .crop-line-selected {
+  background: #ff7675;
+}
+body .cropped-header {
+  background: #e66767;
+}
+body .cropped-element {
+  background: #ea8685;
+}
+body .good-strategy-header {
+  background: #3dc1d3;
+}
+body .good-strategy-element {
+  background: #63cdda;
+}
+body .bad-strategy-header {
+  background: #b33939;
+}
+body .bad-strategy-element {
+  background: #ff5252;
 }
