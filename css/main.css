@@ -115,59 +115,10 @@ body footer {
   padding: 1rem;
   text-align: center;
 }
-body #crop {
-  position: fixed;
-  left: 1rem;
-  bottom: 1rem;
-}
-body #cleanYourSelf {
-  position: fixed;
-  left: 5rem;
-  bottom: 1rem;
-}
-body #sfBack {
-  position: fixed;
-  bottom: 1rem;
-  left: 9rem;
-}
-body #sfForward {
-  position: fixed;
-  bottom: 1rem;
-  left: 13rem;
-}
-body .cursor-crop-down {
-  cursor: s-resize;
-}
-body .cursor-crop-left {
-  cursor: e-resize;
-}
-body .selected {
-  background: #fab1a0;
-}
-body .target {
-  background: #e17055;
-}
-body .crop-target-selected {
-  background: #d63031;
-}
-body .crop-line-selected {
-  background: #ff7675;
-}
-body .cropped-header {
-  background: #e66767;
-}
-body .cropped-element {
-  background: #ea8685;
-}
+
 body .good-strategy-header {
-  background: #3dc1d3;
-}
-body .good-strategy-element {
-  background: #63cdda;
+  background: #3DC1D3;
 }
 body .bad-strategy-header {
   background: #b33939;
-}
-body .bad-strategy-element {
-  background: #ff5252;
 }
