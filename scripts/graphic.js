@@ -15,9 +15,10 @@ function drawCooridanateSystem ( canvas, width, height ) {
   console.log( height );
   console.log( ctx );
   ctx.beginPath();
-  ctx.moveTo( 0, 0 );
-  ctx.lineTo( 0, height );
-  ctx.lineTo( width, height );
+  ctx.moveTo( 50, 50 );
+
+  ctx.lineTo( 50, 350 );
+  ctx.lineTo( width - 50, height );
   ctx.lineTo( width, 0);
   ctx.stroke();
 }

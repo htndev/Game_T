@@ -118,11 +118,7 @@ function autoCrop ( table, isFirst = true ) {
         fillTableFromMain( tbl, tmpTbl );
         console.log( obj.best[ 0 ].parentElement );
         console.log( obj.worst[ 0 ].parentElement );
-        duplicateTable( tbl, simplifyField, obj, 'row', `Û<sub>P<sub>1</sub></sub>(A<sub>${ obj.best[ 0 ].parentElement.getAttribute( 'data-row' ) }</sub>; Š<sub>P<sub>1</sub></sub>${ firstPlayerCropped
-                                                                                                                                                                                        ? '\''
-                                                                                                                                                                                        : '' }) > Û<sub>P<sub>1</sub></sub>(A<sub>${ obj.worst[ 0 ].parentElement.getAttribute( 'data-row' ) }</sub>; Š<sub>P<sub>1</sub></sub>${ firstPlayerCropped
-                                                                                                                                                                                                                                                                                                                                  ? '\''
-                                                                                                                                                                                                                                                                                                                                  : '' })` );
+        duplicateTable( tbl, simplifyField, obj, 'row', `u<sub>P<sub>1</sub></sub>(A<sub>${ obj.best[ 0 ].parentElement.getAttribute( 'data-row' ) }</sub>; S<sub>P<sub>2</sub></sub>${ firstPlayerCropped ? '\'' : '' }) > u<sub>P<sub>1</sub></sub>(A<sub>${ obj.worst[ 0 ].parentElement.getAttribute( 'data-row' ) }</sub>; S<sub>P<sub>2</sub></sub>${ firstPlayerCropped ? '\'' : '' })` );
         firstPlayerCropped = true;
         cropAuto( tbl, rowNum, 'row' );
         autoCropTable = tbl.cloneNode( true );
@@ -141,11 +137,7 @@ function autoCrop ( table, isFirst = true ) {
           let tmpTbl = document.createElement( 'table' );
           tmpTbl.innerHTML = tbl.innerHTML;
           fillTableFromMain( tbl, tmpTbl );
-          duplicateTable( tbl, simplifyField, obj, 'col', `Û<sub>P<sub>2</sub></sub>(B<sub>${ obj.best[ 0 ].parentElement.getAttribute( 'data-col' ) }</sub>; Š<sub>P<sub>2</sub></sub>${ secondPlayerCropped
-                                                                                                                                                                                          ? '\''
-                                                                                                                                                                                          : '' }) > Û<sub>P<sub>2</sub></sub>(B<sub>${ obj.worst[ 0 ].parentElement.getAttribute( 'data-col' ) }</sub>; Š<sub>P<sub>2</sub></sub>${ secondPlayerCropped
-                                                                                                                                                                                                                                                                                                                                    ? '\''
-                                                                                                                                                                                                                                                                                                                                    : '' })` );
+          duplicateTable( tbl, simplifyField, obj, 'col', `u<sub>P<sub>2</sub></sub>(B<sub>${ obj.best[ 0 ].parentElement.getAttribute( 'data-col' ) }</sub>; S<sub>P<sub>1</sub></sub>${ secondPlayerCropped ? '\'' : '' }) > u<sub>P<sub>2</sub></sub>(B<sub>${ obj.worst[ 0 ].parentElement.getAttribute( 'data-col' ) }</sub>; S<sub>P<sub>1</sub></sub>${ secondPlayerCropped ? '\'' : '' })` );
           secondPlayerCropped = true;
           cropAuto( tbl, colNum, 'col' );
           autoCropTable = tbl.cloneNode( true );
@@ -167,11 +159,7 @@ function autoCrop ( table, isFirst = true ) {
         let tmpTbl = document.createElement( 'table' );
         tmpTbl.innerHTML = tbl.innerHTML;
         fillTableFromMain( tbl, tmpTbl );
-        duplicateTable( tbl, simplifyField, obj, 'col', `Û<sub>P<sub>2</sub></sub>(B<sub>${ obj.best[ 0 ].parentElement.getAttribute( 'data-col' ) }</sub>; Š<sub>P<sub>2</sub></sub>${ secondPlayerCropped
-                                                                                                                                                                                        ? '\''
-                                                                                                                                                                                        : '' }) > Û<sub>P<sub>2</sub></sub>(B<sub>${ obj.worst[ 0 ].parentElement.getAttribute( 'data-col' ) }</sub>; Š<sub>P<sub>2</sub></sub>${ secondPlayerCropped
-                                                                                                                                                                                                                                                                                                                                  ? '\''
-                                                                                                                                                                                                                                                                                                                                  : '' })` );
+        duplicateTable( tbl, simplifyField, obj, 'col', `u<sub>P<sub>2</sub></sub>(B<sub>${ obj.best[ 0 ].parentElement.getAttribute( 'data-col' ) }</sub>; S<sub>P<sub>2</sub></sub>${ secondPlayerCropped ? '\'' : '' }) > u<sub>P<sub>2</sub></sub>(B<sub>${ obj.worst[ 0 ].parentElement.getAttribute( 'data-col' ) }</sub>; S<sub>P<sub>2</sub></sub>${ secondPlayerCropped ? '\'' : '' })` );
         secondPlayerCropped = true;
         cropAuto( tbl, colNum, 'col' );
         autoCropTable = tbl.cloneNode( true );
@@ -190,7 +178,7 @@ function autoCrop ( table, isFirst = true ) {
           let tmpTbl = document.createElement( 'table' );
           tmpTbl.innerHTML = tbl.innerHTML;
           fillTableFromMain( tbl, tmpTbl );
-          duplicateTable( tbl, simplifyField, obj, 'row', `Û<sub>P<sub>1</sub></sub>(A<sub>${ obj.best[ 0 ].parentElement.getAttribute( 'data-row' ) }</sub>; Š<sub>P<sub>1</sub></sub>) > Û<sub>P<sub>1</sub></sub>(A<sub>${ obj.worst[ 0 ].parentElement.getAttribute( 'data-row' ) }</sub>; Š<sub>P<sub>1</sub></sub>${ firstPlayerCropped
+          duplicateTable( tbl, simplifyField, obj, 'row', `u<sub>P<sub>1</sub></sub>(A<sub>${ obj.best[ 0 ].parentElement.getAttribute( 'data-row' ) }</sub>; S<sub>P<sub>1</sub></sub>) > u<sub>P<sub>1</sub></sub>(A<sub>${ obj.worst[ 0 ].parentElement.getAttribute( 'data-row' ) }</sub>; S<sub>P<sub>1</sub></sub>${ firstPlayerCropped
                                                                                                                                                                                                                                                                                                                            ? '\''
                                                                                                                                                                                                                                                                                                                            : '' })` );
           firstPlayerCropped = true;
