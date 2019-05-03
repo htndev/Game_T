@@ -7,7 +7,9 @@ const simplifyBtn       = document.querySelector( '#simplifyGame' ),
 let autoCropTable,
     autoCropIndex       = 1,
     firstPlayerCropped  = false,
-    secondPlayerCropped = false;
+    secondPlayerCropped = false,
+    hachureFirstPlayer  = 0,
+    hachureSecondPlayer = 0;
 
 simplifyBtn.addEventListener( 'click', autoSimplifyHandler );
 
@@ -131,8 +133,17 @@ function autoCrop ( table, isFirst = true ) {
         let tmpTbl = document.createElement( 'table' );
         tmpTbl.innerHTML = tbl.innerHTML;
         fillTableFromMain( tbl, tmpTbl );
-        duplicateTable( tbl, simplifyField, obj, 'row', `u<sub>P<sub>1</sub></sub>(A<sub>${ obj.best[ 0 ].parentElement.getAttribute( 'data-row' ) }</sub>; S<sub>P<sub>2</sub></sub>${ firstPlayerCropped ? '\'' : '' }) > u<sub>P<sub>1</sub></sub>(A<sub>${ obj.worst[ 0 ].parentElement.getAttribute( 'data-row' ) }</sub>; S<sub>P<sub>2</sub></sub>${ firstPlayerCropped ? '\'' : '' })` );
-        firstPlayerCropped = true;
+        let hachersFirst = ( function ( amount ) {
+          let str = '';
+          if ( amount > 0 ) {
+            for ( let i = 0; i < amount; i++ ) {
+              str += '\'';
+            }
+          }
+          return str;
+        } )( hachureSecondPlayer );
+        duplicateTable( tbl, simplifyField, obj, 'row', `u<sub>P<sub>1</sub></sub>(A<sub>${ obj.best[ 0 ].parentElement.getAttribute( 'data-row' ) }</sub>; S<sub>P<sub>2</sub></sub>${ hachersFirst }) > u<sub>P<sub>1</sub></sub>(A<sub>${ obj.worst[ 0 ].parentElement.getAttribute( 'data-row' ) }</sub>; S<sub>P<sub>2</sub></sub>${ hachersFirst })` );
+        hachureSecondPlayer++;
         cropAuto( tbl, rowNum, 'row' );
         autoCropTable = tbl.cloneNode( true );
         return autoCrop( autoCropTable, false );
@@ -148,8 +159,17 @@ function autoCrop ( table, isFirst = true ) {
           let tmpTbl = document.createElement( 'table' );
           tmpTbl.innerHTML = tbl.innerHTML;
           fillTableFromMain( tbl, tmpTbl );
-          duplicateTable( tbl, simplifyField, obj, 'col', `u<sub>P<sub>2</sub></sub>(B<sub>${ obj.best[ 0 ].parentElement.getAttribute( 'data-col' ) }</sub>; S<sub>P<sub>1</sub></sub>${ secondPlayerCropped ? '\'' : '' }) > u<sub>P<sub>2</sub></sub>(B<sub>${ obj.worst[ 0 ].parentElement.getAttribute( 'data-col' ) }</sub>; S<sub>P<sub>1</sub></sub>${ secondPlayerCropped ? '\'' : '' })` );
-          secondPlayerCropped = true;
+          let hachersSecond = ( function ( amount ) {
+            let str = '';
+            if ( amount > 0 ) {
+              for ( let i = 0; i < amount; i++ ) {
+                str += '\'';
+              }
+            }
+            return str;
+          } )( hachureFirstPlayer );
+          duplicateTable( tbl, simplifyField, obj, 'col', `u<sub>P<sub>2</sub></sub>(B<sub>${ obj.best[ 0 ].parentElement.getAttribute( 'data-col' ) }</sub>; S<sub>P<sub>1</sub></sub>${ hachersSecond }) > u<sub>P<sub>2</sub></sub>(B<sub>${ obj.worst[ 0 ].parentElement.getAttribute( 'data-col' ) }</sub>; S<sub>P<sub>1</sub></sub>${ hachersSecond })` );
+          hachureFirstPlayer++;
           cropAuto( tbl, colNum, 'col' );
           autoCropTable = tbl.cloneNode( true );
           return autoCrop( autoCropTable );
@@ -168,8 +188,17 @@ function autoCrop ( table, isFirst = true ) {
         let tmpTbl = document.createElement( 'table' );
         tmpTbl.innerHTML = tbl.innerHTML;
         fillTableFromMain( tbl, tmpTbl );
-        duplicateTable( tbl, simplifyField, obj, 'col', `u<sub>P<sub>2</sub></sub>(B<sub>${ obj.best[ 0 ].parentElement.getAttribute( 'data-col' ) }</sub>; S<sub>P<sub>1</sub></sub>${ secondPlayerCropped ? '\'' : '' }) > u<sub>P<sub>2</sub></sub>(B<sub>${ obj.worst[ 0 ].parentElement.getAttribute( 'data-col' ) }</sub>; S<sub>P<sub>1</sub></sub>${ secondPlayerCropped ? '\'' : '' })` );
-        secondPlayerCropped = true;
+        let hachersSecond = ( function ( amount ) {
+          let str = '';
+          if ( amount > 0 ) {
+            for ( let i = 0; i < amount; i++ ) {
+              str += '\'';
+            }
+          }
+          return str;
+        } )( hachureFirstPlayer );
+        duplicateTable( tbl, simplifyField, obj, 'col', `u<sub>P<sub>2</sub></sub>(B<sub>${ obj.best[ 0 ].parentElement.getAttribute( 'data-col' ) }</sub>; S<sub>P<sub>1</sub></sub>${ hachersSecond }) > u<sub>P<sub>2</sub></sub>(B<sub>${ obj.worst[ 0 ].parentElement.getAttribute( 'data-col' ) }</sub>; S<sub>P<sub>1</sub></sub>${ hachersSecond })` );
+        hachureFirstPlayer++;
         cropAuto( tbl, colNum, 'col' );
         autoCropTable = tbl.cloneNode( true );
         return autoCrop( autoCropTable );
@@ -185,10 +214,17 @@ function autoCrop ( table, isFirst = true ) {
           let tmpTbl = document.createElement( 'table' );
           tmpTbl.innerHTML = tbl.innerHTML;
           fillTableFromMain( tbl, tmpTbl );
-          duplicateTable( tbl, simplifyField, obj, 'row', `u<sub>P<sub>1</sub></sub>(A<sub>${ obj.best[ 0 ].parentElement.getAttribute( 'data-row' ) }</sub>; S<sub>P<sub>1</sub></sub>) > u<sub>P<sub>1</sub></sub>(A<sub>${ obj.worst[ 0 ].parentElement.getAttribute( 'data-row' ) }</sub>; S<sub>P<sub>1</sub></sub>${ firstPlayerCropped
-                                                                                                                                                                                                                                                                                                                           ? '\''
-                                                                                                                                                                                                                                                                                                                           : '' })` );
-          firstPlayerCropped = true;
+          let hachersFirst = ( function ( amount ) {
+            let str = '';
+            if ( amount > 0 ) {
+              for ( let i = 0; i < amount; i++ ) {
+                str += '\'';
+              }
+            }
+            return str;
+          } )( hachureSecondPlayer );
+          duplicateTable( tbl, simplifyField, obj, 'row', `u<sub>P<sub>1</sub></sub>(A<sub>${ obj.best[ 0 ].parentElement.getAttribute( 'data-row' ) }</sub>; S<sub>P<sub>2</sub></sub>${ hachersFirst }) > u<sub>P<sub>1</sub></sub>(A<sub>${ obj.worst[ 0 ].parentElement.getAttribute( 'data-row' ) }</sub>; S<sub>P<sub>2</sub></sub>${ hachersFirst })` );
+          hachureSecondPlayer++;
           cropAuto( tbl, rowNum, 'row' );
           autoCropTable = tbl.cloneNode( true );
           return autoCrop( autoCropTable, false );
@@ -202,6 +238,8 @@ function autoCrop ( table, isFirst = true ) {
 // Create card with title that crop has ended
 function theEndOfAutoCrop ( table ) {
   createPlaceForNewTable( simplifyField, table, 'Спрощена таблиця' );
+  hachureFirstPlayer = 0;
+  hachureSecondPlayer = 0;
 }
 
 /**
@@ -209,8 +247,8 @@ function theEndOfAutoCrop ( table ) {
  * @param row – current row for comparing
  * @param array – which array used for comparing
  * @param type – row || col
- * @returns if it has best and worst strategies – returns object, if nothing – false
- *
+ * @returns if it has best and worst strategies – returns object, if nothing –
+ *   false
  */
 function compareRow ( row, array, type = 'row' ) {
   for ( let r = 0; r < array.length; r++ ) {
