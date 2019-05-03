@@ -143,7 +143,8 @@ function autoCrop ( table, isFirst = true ) {
           return str;
         } )( hachureSecondPlayer );
         duplicateTable( tbl, simplifyField, obj, 'row', `u<sub>P<sub>1</sub></sub>(A<sub>${ obj.best[ 0 ].parentElement.getAttribute( 'data-row' ) }</sub>; S<sub>P<sub>2</sub></sub>${ hachersFirst }) > u<sub>P<sub>1</sub></sub>(A<sub>${ obj.worst[ 0 ].parentElement.getAttribute( 'data-row' ) }</sub>; S<sub>P<sub>2</sub></sub>${ hachersFirst })` );
-        hachureSecondPlayer++;
+        // hachureSecondPlayer++;
+        hachureFirstPlayer++;
         cropAuto( tbl, rowNum, 'row' );
         autoCropTable = tbl.cloneNode( true );
         return autoCrop( autoCropTable, false );
@@ -169,7 +170,8 @@ function autoCrop ( table, isFirst = true ) {
             return str;
           } )( hachureFirstPlayer );
           duplicateTable( tbl, simplifyField, obj, 'col', `u<sub>P<sub>2</sub></sub>(B<sub>${ obj.best[ 0 ].parentElement.getAttribute( 'data-col' ) }</sub>; S<sub>P<sub>1</sub></sub>${ hachersSecond }) > u<sub>P<sub>2</sub></sub>(B<sub>${ obj.worst[ 0 ].parentElement.getAttribute( 'data-col' ) }</sub>; S<sub>P<sub>1</sub></sub>${ hachersSecond })` );
-          hachureFirstPlayer++;
+          // hachureFirstPlayer++;
+          hachureSecondPlayer++;
           cropAuto( tbl, colNum, 'col' );
           autoCropTable = tbl.cloneNode( true );
           return autoCrop( autoCropTable );
@@ -198,7 +200,8 @@ function autoCrop ( table, isFirst = true ) {
           return str;
         } )( hachureFirstPlayer );
         duplicateTable( tbl, simplifyField, obj, 'col', `u<sub>P<sub>2</sub></sub>(B<sub>${ obj.best[ 0 ].parentElement.getAttribute( 'data-col' ) }</sub>; S<sub>P<sub>1</sub></sub>${ hachersSecond }) > u<sub>P<sub>2</sub></sub>(B<sub>${ obj.worst[ 0 ].parentElement.getAttribute( 'data-col' ) }</sub>; S<sub>P<sub>1</sub></sub>${ hachersSecond })` );
-        hachureFirstPlayer++;
+        // hachureFirstPlayer++;
+        hachureSecondPlayer++;
         cropAuto( tbl, colNum, 'col' );
         autoCropTable = tbl.cloneNode( true );
         return autoCrop( autoCropTable );
@@ -224,7 +227,8 @@ function autoCrop ( table, isFirst = true ) {
             return str;
           } )( hachureSecondPlayer );
           duplicateTable( tbl, simplifyField, obj, 'row', `u<sub>P<sub>1</sub></sub>(A<sub>${ obj.best[ 0 ].parentElement.getAttribute( 'data-row' ) }</sub>; S<sub>P<sub>2</sub></sub>${ hachersFirst }) > u<sub>P<sub>1</sub></sub>(A<sub>${ obj.worst[ 0 ].parentElement.getAttribute( 'data-row' ) }</sub>; S<sub>P<sub>2</sub></sub>${ hachersFirst })` );
-          hachureSecondPlayer++;
+          // hachureSecondPlayer++;
+          hachureFirstPlayer++;
           cropAuto( tbl, rowNum, 'row' );
           autoCropTable = tbl.cloneNode( true );
           return autoCrop( autoCropTable, false );
