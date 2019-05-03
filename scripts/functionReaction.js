@@ -11,6 +11,7 @@ let isFunctionReaction  = false,
     secondPlayerTableFR = document.querySelector( '#tableSecondPlayer' ),
     firstPlayerTableFR  = document.querySelector( '#tableFirstPlayer' );
 
+// Generating tables for function reaction
 function generateFunctionReactionTables () {
   let firstPlayerInner,
       secondPlayerInner;
@@ -31,6 +32,7 @@ function findRowMax ( row, index ) {
   findMaxes( row, index, secondPlayerMaxes.children[ 1 ], 'A', 'B' );
 }
 
+// Searching for maxes
 function findMaxes ( row, index, placeForStrategies, rowLetter, colLetter ) {
   let maxCeils   = [],
       maxIndexes = [],
@@ -49,13 +51,9 @@ function findMaxes ( row, index, placeForStrategies, rowLetter, colLetter ) {
   }
   let str = '';
   maxIndexes.forEach( ( element, index ) => {
-    str += `${ colLetter }<sub>${ element + 1 }</sub>${ index !== maxIndexes.length - 1
-                                                        ? ', '
-                                                        : '' }`;
+    str += `${ colLetter }<sub>${ element + 1 }</sub>${ index !== maxIndexes.length - 1 ? ', ' : '' }`;
   } );
-  placeForStrategies.innerHTML += `<p>${ index + 1 }. š<sub>${ colLetter }</sub>(${ rowLetter }<sub>${ index + 1 }</sub>) = ${ maxIndexes.length > 1
-                                                                                                                               ? `{ ${ str } }`
-                                                                                                                               : str }; Û<sub>${ rowLetter }</sub>(${ colLetter }<sub>${ index + 1 }</sub>) = ${ maxCeils[ 0 ].value }</p>`;
+  placeForStrategies.innerHTML += `<p>${ index + 1 }. š<sub>${ colLetter }</sub>(${ rowLetter }<sub>${ index + 1 }</sub>) = ${ maxIndexes.length > 1 ? `{ ${ str } }` : str }; Û<sub>${ rowLetter }</sub>(${ colLetter }<sub>${ index + 1 }</sub>) = ${ maxCeils[ 0 ].value }</p>`;
   maxCeils.forEach( element => {
     element.parentNode.classList.add( 'checked' );
   } );
@@ -108,6 +106,7 @@ document.addEventListener( 'click', function ( e ) {
   }
 } );
 
+// Cleaning
 findFunctionReactionBtn.addEventListener( 'click', function () {
   let playerOneTable = getInputsInTableArray( getTableInArray( firstPlayerTableFR.children[ 0 ] ) ),
       playerTwoTable = getInputsInTableArray( getTableInArray( secondPlayerTableFR.children[ 0 ] ) );

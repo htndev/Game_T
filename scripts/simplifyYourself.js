@@ -16,6 +16,12 @@ let placeCropTable,
     croppingArrayYS        = [],
     croppingElementYS;
 
+/**
+ * Cropping a row or col that user chose
+ * @param table
+ * @param number – row || col
+ * @param type – row || col
+ */
 function crop ( table, number, type ) {
   let newTable = document.createElement( 'table' ),
       poppingArray,
@@ -69,6 +75,7 @@ function crop ( table, number, type ) {
   } );
 }
 
+// Reset all styles and table
 function cleanSimplifingYourself ( table, mainTable, place, restPlace ) {
   place.innerHTML = '';
   restPlace.innerHTML = '';
@@ -79,6 +86,7 @@ function cleanSimplifingYourself ( table, mainTable, place, restPlace ) {
   croppableTable = tmpTable;
 }
 
+// Removing styles
 function cleanTable ( table ) {
   let thead = nodeListToArray( table.querySelector( 'thead' ).children[ 0 ].querySelectorAll( 'th' ) ),
       tbody = table.querySelector( 'tbody' );
@@ -110,6 +118,7 @@ function cleanSmpAreaHandler () {
   }
 }
 
+// Cropping table
 function cropHandler () {
   if ( isCroppingYourself ) {
     if ( cropSelectedArray.length === 0 ) return;
@@ -138,6 +147,7 @@ function cropHandler () {
   }
 }
 
+// Highlight and choose this row or col
 document.addEventListener( 'click', function ( e ) {
   if ( isCroppingYourself ) {
     try {
@@ -185,6 +195,7 @@ document.addEventListener( 'click', function ( e ) {
   }
 } );
 
+// Highlight current section where is cursor
 document.body.addEventListener( 'mouseover', function ( e ) {
   if ( isCroppingYourself ) {
     try {
@@ -246,6 +257,7 @@ document.addEventListener( 'mouseout', function ( e ) {
   }
 } );
 
+// Clearing table and object, that user selected
 function unselectCropArea () {
   if ( isCroppingYourself ) {
     if ( cropSelectedTarget !== undefined ) {

@@ -11,6 +11,7 @@ let autoCropTable,
 
 simplifyBtn.addEventListener( 'click', autoSimplifyHandler );
 
+// Function that react on cropping
 function autoSimplifyHandler () {
   autoCropIndex = 1;
   simplifyField.innerHTML = '';
@@ -19,6 +20,7 @@ function autoSimplifyHandler () {
   secondPlayerCropped = false;
 }
 
+// Special duplicating cropping
 function duplicateTable ( table, place, obj, type, subText = '' ) {
   let tmp = table.cloneNode( table );
   highlightBestWorst( tmp, obj.best, obj.worst, type );
@@ -34,6 +36,7 @@ gameMatrixTab.addEventListener( 'click', function () {
   secondPlayerTableFR.innerHTML = '';
 } );
 
+// Function that highlighting best headers
 function highlightBestWorst ( table, best, worst, type ) {
   let headingNumGood,
       headingGood,
@@ -59,6 +62,12 @@ function highlightBestWorst ( table, best, worst, type ) {
   headingBad.classList.add( 'bad-strategy-header' );
 }
 
+/**
+ * Removing rows and columns with headers (recursive)
+ * @param table
+ * @param number – number of row or col
+ * @param type – row || col
+ */
 function cropAuto ( table, number, type ) {
   let heading,
       rows;
@@ -95,6 +104,12 @@ function cleanAutoCropTable ( table ) {
   } );
 }
 
+/**
+ *
+ * @param table
+ * @param isFirst – what we need to crop
+ * @returns recursive autoCrop or stop cropping
+ */
 function autoCrop ( table, isFirst = true ) {
   try {
     cleanAutoCropTable( table );
@@ -116,8 +131,6 @@ function autoCrop ( table, isFirst = true ) {
         let tmpTbl = document.createElement( 'table' );
         tmpTbl.innerHTML = tbl.innerHTML;
         fillTableFromMain( tbl, tmpTbl );
-        console.log( obj.best[ 0 ].parentElement );
-        console.log( obj.worst[ 0 ].parentElement );
         duplicateTable( tbl, simplifyField, obj, 'row', `u<sub>P<sub>1</sub></sub>(A<sub>${ obj.best[ 0 ].parentElement.getAttribute( 'data-row' ) }</sub>; S<sub>P<sub>2</sub></sub>${ firstPlayerCropped ? '\'' : '' }) > u<sub>P<sub>1</sub></sub>(A<sub>${ obj.worst[ 0 ].parentElement.getAttribute( 'data-row' ) }</sub>; S<sub>P<sub>2</sub></sub>${ firstPlayerCropped ? '\'' : '' })` );
         firstPlayerCropped = true;
         cropAuto( tbl, rowNum, 'row' );
@@ -129,10 +142,8 @@ function autoCrop ( table, isFirst = true ) {
       let tblVert = switchArrayHeading( tblHoriz ),
           obj;
       for ( let row = 0; row < tblVert.length; row++ ) {
-        obj = compareRow( tblVert[ row ], tblVert );
+        obj = compareRow( tblVert[ row ], tblVert, 'col' );
         if ( typeof obj === 'object' ) {
-          console.log( obj.best[ 0 ].parentElement );
-          console.log( obj.worst[ 0 ].parentElement );
           let colNum = +obj.worst[ 0 ].parentElement.getAttribute( 'data-col' );
           let tmpTbl = document.createElement( 'table' );
           tmpTbl.innerHTML = tbl.innerHTML;
@@ -151,15 +162,13 @@ function autoCrop ( table, isFirst = true ) {
     let tblVert = getInputsInTableArray( switchArrayHeading( getTableInArray( tbl ) ) ),
         obj;
     for ( let row = 0; row < tblVert.length; row++ ) {
-      obj = compareRow( tblVert[ row ], tblVert );
+      obj = compareRow( tblVert[ row ], tblVert, 'col' );
       if ( typeof obj === 'object' ) {
-        console.log( obj.best[ 0 ].parentElement );
-        console.log( obj.worst[ 0 ].parentElement );
         let colNum = +obj.worst[ 0 ].parentElement.getAttribute( 'data-col' );
         let tmpTbl = document.createElement( 'table' );
         tmpTbl.innerHTML = tbl.innerHTML;
         fillTableFromMain( tbl, tmpTbl );
-        duplicateTable( tbl, simplifyField, obj, 'col', `u<sub>P<sub>2</sub></sub>(B<sub>${ obj.best[ 0 ].parentElement.getAttribute( 'data-col' ) }</sub>; S<sub>P<sub>2</sub></sub>${ secondPlayerCropped ? '\'' : '' }) > u<sub>P<sub>2</sub></sub>(B<sub>${ obj.worst[ 0 ].parentElement.getAttribute( 'data-col' ) }</sub>; S<sub>P<sub>2</sub></sub>${ secondPlayerCropped ? '\'' : '' })` );
+        duplicateTable( tbl, simplifyField, obj, 'col', `u<sub>P<sub>2</sub></sub>(B<sub>${ obj.best[ 0 ].parentElement.getAttribute( 'data-col' ) }</sub>; S<sub>P<sub>1</sub></sub>${ secondPlayerCropped ? '\'' : '' }) > u<sub>P<sub>2</sub></sub>(B<sub>${ obj.worst[ 0 ].parentElement.getAttribute( 'data-col' ) }</sub>; S<sub>P<sub>1</sub></sub>${ secondPlayerCropped ? '\'' : '' })` );
         secondPlayerCropped = true;
         cropAuto( tbl, colNum, 'col' );
         autoCropTable = tbl.cloneNode( true );
@@ -172,8 +181,6 @@ function autoCrop ( table, isFirst = true ) {
       for ( let row = 0; row < tblHoriz.length; row++ ) {
         obj = compareRow( tblHoriz[ row ], tblHoriz );
         if ( typeof obj === 'object' ) {
-          console.log( obj.best[ 0 ].parentElement );
-          console.log( obj.worst[ 0 ].parentElement );
           let rowNum = +obj.worst[ 0 ].parentElement.getAttribute( 'data-row' );
           let tmpTbl = document.createElement( 'table' );
           tmpTbl.innerHTML = tbl.innerHTML;
@@ -192,11 +199,20 @@ function autoCrop ( table, isFirst = true ) {
   }
 }
 
+// Create card with title that crop has ended
 function theEndOfAutoCrop ( table ) {
   createPlaceForNewTable( simplifyField, table, 'Спрощена таблиця' );
 }
 
-function compareRow ( row, array ) {
+/**
+ * Comparing row with all rows in array
+ * @param row – current row for comparing
+ * @param array – which array used for comparing
+ * @param type – row || col
+ * @returns if it has best and worst strategies – returns object, if nothing – false
+ *
+ */
+function compareRow ( row, array, type = 'row' ) {
   for ( let r = 0; r < array.length; r++ ) {
     let bigger = [];
     for ( let c = 0; c < array[ r ].length; c++ ) {
@@ -213,16 +229,29 @@ function compareRow ( row, array ) {
       }
     }
     if ( !bigger.includes( false ) && bigger.length > 0 ) {
-      array[ r ].forEach( element => {
-        element.parentElement.classList.add( 'bad-strategy-element' );
-      } );
-      row.forEach( element => {
-        element.parentElement.classList.add( 'good-strategy-element' );
-      } );
-      return {
-        best : row,
-        worst: array[ r ]
-      };
+      if ( type === 'row' ) {
+        array[ r ].forEach( element => {
+          element.parentElement.classList.add( 'bad-strategy-element' );
+        } );
+        row.forEach( element => {
+          element.parentElement.classList.add( 'good-strategy-element' );
+        } );
+        return {
+          best : row,
+          worst: array[ r ]
+        };
+      } else {
+        array[ r ].forEach( element => {
+          element.parentElement.classList.add( 'good-strategy-element' );
+        } );
+        row.forEach( element => {
+          element.parentElement.classList.add( 'bad-strategy-element' );
+        } );
+        return {
+          best : array[ r ],
+          worst: row
+        };
+      }
     }
   }
   return false;

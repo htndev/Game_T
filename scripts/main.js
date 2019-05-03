@@ -1,3 +1,4 @@
+// Material features init
 $( document ).ready( function () {
   $( '.tabs' ).tabs();
 } );
@@ -22,6 +23,7 @@ let
 
 generateBtn.addEventListener( 'click', generateHandler );
 
+// Generating field
 function generateHandler () {
   generationSection.style.display = 'block';
   secondPlayerTableFR.innerHTML = firstPlayerTableFR.innerHTML = '';
@@ -44,6 +46,7 @@ function generateHandler () {
 
 fillBtn.addEventListener( 'click', fillHandler );
 
+// Filling table
 function fillHandler () {
   let table  = getTableInArray( mainTable ),
       inputs = getInputsInTableArray( table ),
@@ -93,13 +96,13 @@ function fillHandler () {
   secondPlayerCropped = false;
 }
 
+// Imitating clicks on tab
 function toMatrix () {
   let evt = document.createEvent( 'MouseEvents' );
   evt.initMouseEvent( 'click', true, true, window,
     0, 0, 0, 0, 0, false, false, false, false, 0, null );
   gameMatrixTab.dispatchEvent( evt ); // element for click
 }
-
 function toSimplifing () {
   let evt = document.createEvent( 'MouseEvents' );
   evt.initMouseEvent( 'click', true, true, window,
@@ -128,6 +131,7 @@ function toGraphic () {
   graphicTab.dispatchEvent( evt ); // element for click
 }
 
+// Handling keyboard
 document.addEventListener( 'keyup', function ( e ) {
   if ( e.code === 'Backspace' ) {
     if ( isCroppingYourself ) {

@@ -4,6 +4,7 @@ const
   gamePriceTab   = document.querySelector( '#gp' );
 let priceTable;
 
+// Adding new cells to table
 function appendAlphaBeta ( table ) {
   let theadTr = table.querySelector( 'thead' ).querySelector( 'tr' );
   let alpha = document.createElement( 'th' );
@@ -45,6 +46,7 @@ function appendAlphaBeta ( table ) {
   table.appendChild( tfoot );
 }
 
+// Main algorithm
 findPrice.addEventListener( 'click', function () {
   let table = getTableInArray( priceTable );
   table.forEach( ( element, index ) => {

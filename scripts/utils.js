@@ -1,3 +1,4 @@
+// Fill table from main table. (Matrix game Tab to another in tabs)
 function fillTableFromMain ( mainTable, firstTable, secondTable ) {
   if ( secondTable === undefined ) {
     let inputs = getInputsInTableArray( getTableInArray( mainTable ) ),
@@ -29,6 +30,15 @@ function fillTableFromMain ( mainTable, firstTable, secondTable ) {
   }
 }
 
+/**
+ * Switch rows and columns
+ * Example:
+ * [ 0 1 ]
+ * [ 2 3 ]
+ * =======
+ * [ 0 2 ]
+ * [ 1 3 ]
+  */
 function switchArrayHeading ( array ) {
   let tmp = [];
   for ( let row = 0; row < array[ 0 ].length; row++ ) {
@@ -41,6 +51,7 @@ function switchArrayHeading ( array ) {
   return tmp;
 }
 
+// Convert table to array for operations
 function getTableInArray ( table ) {
   let arrayOfTD = [],
       tableRows = nodeListToArray( table.querySelector( 'tbody' )
@@ -57,6 +68,7 @@ function getTableInArray ( table ) {
   return arrayOfTD;
 }
 
+// Convert 'table' array to inputs array
 function getInputsInTableArray ( table ) {
   let arrayOfInputs = [];
   table.forEach( element => {
@@ -69,6 +81,7 @@ function getInputsInTableArray ( table ) {
   return arrayOfInputs;
 }
 
+// Getting values from input array
 function getValuesFromInputArray ( inputArray ) {
   let valuesArray = [];
   inputArray.forEach( row => {
@@ -81,6 +94,7 @@ function getValuesFromInputArray ( inputArray ) {
   return valuesArray;
 }
 
+// Duplicating table
 function createAliasTable ( mainTable, place ) {
   let table = document.createElement( 'table' );
   table.innerHTML = mainTable.innerHTML;
@@ -88,10 +102,16 @@ function createAliasTable ( mainTable, place ) {
   return table;
 }
 
+/**
+ * document.querySelector('element') – will return nodeList
+ * Usage: nodeListToArray(document.querySelector('element')) – will return array
+ *
+  */
 function nodeListToArray ( nodeList ) {
   return Array.prototype.slice.call( nodeList );
 }
 
+// Creating new place for table (using in crops)
 function createPlaceForNewTable ( place, table, text ) {
   let row = document.createElement( 'div' );
   row.classList.add( 'row' );
@@ -114,6 +134,11 @@ function createPlaceForNewTable ( place, table, text ) {
   return row;
 }
 
+/**
+ * Comparing arrays values
+ * @param array
+ * @returns {boolean}
+ */
 Array.prototype.equals = function ( array ) {
   if ( !array ) {
     return false;

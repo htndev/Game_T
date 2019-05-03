@@ -1,3 +1,6 @@
+/**
+ * Creating main table
+ */
 function createTable ( firstPlayerStrategies, secondPlayerStrategies ) {
   mainTable.innerHTML = '';
   let thead  = document.createElement( 'thead' ),
