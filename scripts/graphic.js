@@ -75,8 +75,8 @@ function redraw ( width, height ) {
   ctx.fillText( '0', XL_PADDING - 4, MD + 15 );
   ctx.fillText( '1', XL - 4, MD + 15 );
   ctx.fillText( 'q', XL + 25, MD + 15 );
-  ctx.fillText( 'B₁', XL_PADDING + 10, MEDIUM_PADDING + 15 );
-  ctx.fillText( 'B₂', XL + 10, XL_PADDING - 10 );
+  ctx.fillText( `${ firstPlayerStrategies.value > secondPlayerStrategies.value ? 'B₁' : 'A₁' }`, XL_PADDING + 10, MEDIUM_PADDING + 15 );
+  ctx.fillText( `${ firstPlayerStrategies.value > secondPlayerStrategies.value ? 'B₂' : 'A₂' }`, XL + 10, XL_PADDING - 10 );
   ctx.beginPath();
   ctx.moveTo( RIGHT_SIDE_WIDTH, LINE_HEIGHT_MAX );
   ctx.lineTo( RIGHT_SIDE_WIDTH, LINE_HEIGHT_MIN );
@@ -120,7 +120,7 @@ function setCoordinates () {
           }
         }
         if ( tmp[ 1 ][ i - 1 ] !== undefined ) {
-          if ( tmp[ 1 ][ i - 1 ].val !== tmp[ 0 ][ i ].val ) {
+          if ( tmp[ 1 ][ i - 1 ].val !== tmp[ 1 ][ i ].val ) {
             prevLvlP2 = LINE_HEIGHT_MIN + skip;
           }
         }
@@ -216,6 +216,7 @@ function setCoordinates () {
         }
       }
       tmp.forEach( arr => arr.sort( ( a, b ) => a.val - b.val ).reverse() );
+      tmp.forEach( ( arr, index ) => arr.forEach( ( elem, _index ) => tmp[ index ][ _index ].sortedIndex = _index ) );
       space = Math.round( DRAWING_SPACE / ( tmp[ 0 ].length - 1 ) );
       tmp = switchArrayHeading( tmp );
       let skip      = 0,
@@ -295,7 +296,7 @@ function setCoordinates () {
       ctx.beginPath();
       ctx.strokeStyle = '#F00';
       ctx.moveTo( topDots.xL, topDots.yL );
-      if ( topDots.itemL.index !== topDots.itemR.index ) {
+      if ( topDots.itemL.index !== topDots.itemR.index) {
         ctx.lineTo( topConnection.dot.x, topConnection.dot.y );
       }
       ctx.lineTo( topDots.xR, topDots.yR );
