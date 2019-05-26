@@ -4,9 +4,11 @@
  * @param valueR – value from the right side
  */
 class Line {
-  constructor ( xL, yL, xR, yR ) {
+  constructor ( xL, yL, xR, yR, valLeft, valRight ) {
     this.leftSide = { x: xL, y: yL };
     this.rightSide = { x: xR, y: yR };
+    this.valLeft = valLeft;
+    this.valRight = valRight;
   }
 
   drawConnection () {
@@ -27,6 +29,8 @@ const
   LINE_HEIGHT_MAX  = 420,
   LINE_HEIGHT_MIN  = 80,
   DRAWING_SPACE    = LINE_HEIGHT_MAX - LINE_HEIGHT_MIN;
+
+let dotsInserted = [];
 
 graphicTab.addEventListener( 'click', function () {
   isCroppingYourself = false;
@@ -91,7 +95,10 @@ function setCoordinates () {
       linesArray   = [],
       space,
       topDots      = {},
-      lowDots      = {};
+      lowDots      = {},
+      graphTable   = document.querySelector( '#graphTable' );
+  graphTable.innerHTML = '';
+  graphTable.appendChild( mainTable.cloneNode( true ) );
   if ( lengthP1 === 2 || lengthP2 === 2 ) {
     let valArr = getValuesFromInputArray( getInputsInTableArray( graphicTable ) );
     if ( lengthP1 === 2 ) {
@@ -102,54 +109,29 @@ function setCoordinates () {
           l: tmp[ 0 ][ i ], r: tmp[ 1 ][ i ], startIndex: i
         } );
       }
-      space = Math.round( DRAWING_SPACE / tmp[ 0 ].length - 1 );
       for ( let i = 0; i < tmp.length; i++ ) {
         for ( let j = 0; j < tmp[ i ].length; j++ ) {
           tmp[ i ][ j ] = { val: tmp[ i ][ j ], index: j };
         }
       }
       tmp.forEach( arr => arr.sort( ( a, b ) => a.val - b.val ).reverse() );
-      let skip      = 0,
-          waysArr   = [],
-          prevLvlP1 = LINE_HEIGHT_MIN,
-          prevLvlP2 = LINE_HEIGHT_MIN;
+      let waysArr = [];
+      const MAX = tmp[ 0 ][ 0 ].val > tmp[ 1 ][ 0 ].val ? tmp[ 0 ][ 0 ].val : tmp[ 1 ][ 0 ].val,
+            MIN = tmp[ 0 ][ tmp[ 0 ].length - 1 ].val > tmp[ 1 ][ tmp[ 0 ].length - 1 ].val ? tmp[ 0 ][ tmp[ 0 ].length - 1 ].val : tmp[ 1 ][ tmp[ 0 ].length - 1 ].val;
       for ( let i = 0; i < tmp[ 0 ].length; i++ ) {
-        if ( tmp[ 0 ][ i - 1 ] !== undefined ) {
-          if ( tmp[ 0 ][ i - 1 ].val !== tmp[ 0 ][ i ].val ) {
-            prevLvlP1 = LINE_HEIGHT_MIN + skip;
-          }
-        }
-        if ( tmp[ 1 ][ i - 1 ] !== undefined ) {
-          if ( tmp[ 1 ][ i - 1 ].val !== tmp[ 1 ][ i ].val ) {
-            prevLvlP2 = LINE_HEIGHT_MIN + skip;
-          }
-        }
-        drawPoint( LEFT_SIDE_WIDTH, prevLvlP1, tmp[ 0 ][ i ].val, 'left' );
+        let y1 = getBoundaryY( MAX, MIN, tmp[ 0 ][ i ].val ),
+            y2 = getBoundaryY( MAX, MIN, tmp[ 1 ][ i ].val );
+        // console.log( y1, y2 );
+        drawPoint( LEFT_SIDE_WIDTH, y1, tmp[ 0 ][ i ].val, 'left' );
         waysArr.push( {
-          item: tmp[ 0 ][ i ], x: LEFT_SIDE_WIDTH, y: prevLvlP1
+          item: tmp[ 0 ][ i ], x: LEFT_SIDE_WIDTH, y: y1, val: tmp[ 0 ][ i ].val
         } );
-        drawPoint( RIGHT_SIDE_WIDTH, prevLvlP2, tmp[ 1 ][ i ].val, 'right' );
+        drawPoint( RIGHT_SIDE_WIDTH, y2, tmp[ 1 ][ i ].val, 'right' );
         waysArr.push( {
-          item: tmp[ 1 ][ i ], x: RIGHT_SIDE_WIDTH, y: prevLvlP2
+          item: tmp[ 1 ][ i ], x: RIGHT_SIDE_WIDTH, y: y2,
+          val : tmp[ 1 ][ i ].val
         } );
-        skip += space;
       }
-      topDots = {
-        itemL: tmp[ 0 ][ 0 ],
-        xL   : LEFT_SIDE_WIDTH,
-        yL   : LINE_HEIGHT_MIN,
-        itemR: tmp[ 1 ][ 0 ],
-        xR   : RIGHT_SIDE_WIDTH,
-        yR   : LINE_HEIGHT_MIN
-      };
-      lowDots = {
-        itemL: tmp[ 0 ][ tmp.length - 1 ],
-        xL   : LEFT_SIDE_WIDTH,
-        yL   : prevLvlP1,
-        itemR: tmp[ 0 ][ tmp.length - 1 ],
-        xR   : RIGHT_SIDE_WIDTH,
-        yR   : prevLvlP2
-      };
       waysArr.sort( ( a, b ) => a.item.index - b.item.index );
       for ( let i = 0; i < waysArr.length; i++ ) {
         if ( waysArr[ i + 1 ] !== undefined ) {
@@ -158,47 +140,37 @@ function setCoordinates () {
               waysArr[ i ].x,
               waysArr[ i ].y,
               waysArr[ i + 1 ].x,
-              waysArr[ i + 1 ].y );
+              waysArr[ i + 1 ].y,
+              waysArr[ i ].val,
+              waysArr[ i + 1 ].val );
             linesArray.push( line );
           }
         }
       }
       linesArray.forEach( el => el.drawConnection() );
-      let dots = [];
+      let connections = [];
       for ( let i = 0; i < linesArray.length; i++ ) {
-        dots.push( compareLineWithAllLines( linesArray[ i ], linesArray ) );
+        connections.push( compareLineWithAllLines( linesArray[ i ], linesArray ) );
       }
-      let topConnection = {
-            dot: { x: 99999, y: 99999 }
-          },
-          lowConnection = {
-            dot: { x: -99999, y: -99999 }
-          };
-      dots.forEach( elem => {
-        elem.forEach( item => {
-          if ( item.dot.y < topConnection.dot.y ) {
-            topConnection = item;
-          } else if ( item.dot.y > lowConnection.dot.y ) {
-            lowConnection = item;
-          }
-        } );
-      } );
-      ctx.beginPath();
-      ctx.strokeStyle = '#F00';
-      ctx.moveTo( topDots.xL, topDots.yL );
-      if ( topDots.itemL.index !== topDots.itemR.index ) {
-        ctx.lineTo( topConnection.dot.x, topConnection.dot.y );
-      }
-      ctx.lineTo( topDots.xR, topDots.yR );
-      ctx.stroke();
-      ctx.beginPath();
-      ctx.strokeStyle = '#00A8FF';
-      ctx.moveTo( lowDots.xL, lowDots.yL );
-      if ( lowDots.itemL.index !== lowDots.itemR.index ) {
-        ctx.lineTo( lowConnection.dot.x, lowConnection.dot.y );
-      }
-      ctx.lineTo( lowDots.xR, lowDots.yR );
-      ctx.stroke();
+      console.log( connections );
+      // console.log( dotsInserted );
+      // dots.forEach( elem => {
+      //   elem.forEach( item => {
+      //     if ( item.insertion.y < topConnection.insertion.y ) {
+      //       topConnection = item;
+      //     } else if ( item.insertion.y > lowConnection.insertion.y ) {
+      //       lowConnection = item;
+      //     }
+      //   } );
+      // } );
+      // ctx.beginPath();
+      // ctx.strokeStyle = '#00A8FF';
+      // ctx.moveTo( lowDots.xL, lowDots.yL );
+      // if ( lowDots.itemL.index !== lowDots.itemR.index ) {
+      //   ctx.lineTo( lowConnection.insertion.x, lowConnection.insertion.y );
+      // }
+      // ctx.lineTo( lowDots.xR, lowDots.yR );
+      // ctx.stroke();
     } else if ( lengthP2 === 2 ) {
       let tmp          = switchArrayHeading( valArr ),
           relationship = [];
@@ -217,48 +189,29 @@ function setCoordinates () {
       }
       tmp.forEach( arr => arr.sort( ( a, b ) => a.val - b.val ).reverse() );
       tmp.forEach( ( arr, index ) => arr.forEach( ( elem, _index ) => tmp[ index ][ _index ].sortedIndex = _index ) );
-      space = Math.round( DRAWING_SPACE / ( tmp[ 0 ].length - 1 ) );
       tmp = switchArrayHeading( tmp );
-      let skip      = 0,
-          waysArr   = [],
-          prevLvlP1 = LINE_HEIGHT_MIN,
-          prevLvlP2 = LINE_HEIGHT_MIN;
+      let waysArr = [];
+      const MIN = tmp[ 0 ][ 0 ].val > tmp[ 0 ][ 1 ].val ? tmp[ 0 ][ 0 ].val : tmp[ 0 ][ 1 ].val,
+            MAX = tmp[ tmp.length - 1 ][ 0 ] > tmp[ tmp.length - 1 ][ 1 ] ? tmp[ tmp.length - 1 ][ 0 ].val : tmp[ tmp.length - 1 ][ 1 ].val;
       for ( let i = 0; i < tmp.length; i++ ) {
-        if ( tmp[ i - 1 ] !== undefined ) {
-          if ( tmp[ i - 1 ][ 0 ].val !== tmp[ i ][ 0 ].val ) {
-            prevLvlP1 = LINE_HEIGHT_MIN + skip;
-          }
-        }
-        if ( tmp[ i - 1 ] !== undefined ) {
-          if ( tmp[ i - 1 ][ 1 ].val !== tmp[ i ][ 1 ].val ) {
-            prevLvlP2 = LINE_HEIGHT_MIN + skip;
-          }
-        }
-        drawPoint( LEFT_SIDE_WIDTH, prevLvlP1, tmp[ i ][ 0 ].val, 'left' );
+        let y1 = getBoundaryY( MIN, MAX, tmp[ i ][ 0 ].val ),
+            y2 = getBoundaryY( MIN, MAX, tmp[ i ][ 1 ].val );
+        drawPoint( LEFT_SIDE_WIDTH, y1, tmp[ i ][ 0 ].val, 'left' );
         waysArr.push( {
-          item: tmp[ i ][ 0 ], x: LEFT_SIDE_WIDTH, y: prevLvlP1
+          item: tmp[ i ][ 0 ], x: LEFT_SIDE_WIDTH, y: y1
         } );
-        drawPoint( RIGHT_SIDE_WIDTH, prevLvlP2, tmp[ i ][ 1 ].val, 'right' );
+        drawPoint( RIGHT_SIDE_WIDTH, y2, tmp[ i ][ 1 ].val, 'right' );
         waysArr.push( {
-          item: tmp[ i ][ 1 ], x: RIGHT_SIDE_WIDTH, y: prevLvlP2
+          item: tmp[ i ][ 1 ], x: RIGHT_SIDE_WIDTH, y: y2
         } );
-        skip += space;
       }
       topDots = {
         itemL: tmp[ 0 ][ 0 ],
         xL   : LEFT_SIDE_WIDTH,
-        yL   : LINE_HEIGHT_MIN,
+        yL   : getBoundaryY( MIN, MAX, tmp[ 0 ][ 0 ].val ),
         itemR: tmp[ 0 ][ 1 ],
         xR   : RIGHT_SIDE_WIDTH,
-        yR   : LINE_HEIGHT_MIN
-      };
-      lowDots = {
-        itemL: tmp[ tmp.length - 1 ][ 0 ],
-        xL   : LEFT_SIDE_WIDTH,
-        yL   : prevLvlP1,
-        itemR: tmp[ tmp.length - 1 ][ 1 ],
-        xR   : RIGHT_SIDE_WIDTH,
-        yR   : prevLvlP2
+        yR   : getBoundaryY( MIN, MAX, tmp[ 0 ][ 1 ].val )
       };
       waysArr.sort( ( a, b ) => a.item.index - b.item.index );
       for ( let i = 0; i < waysArr.length; i++ ) {
@@ -286,9 +239,9 @@ function setCoordinates () {
           };
       dots.forEach( elem => {
         elem.forEach( item => {
-          if ( item.dot.y < topConnection.dot.y ) {
+          if ( item.insertion.y < topConnection.insertion.y ) {
             topConnection = item;
-          } else if ( item.dot.y > lowConnection.dot.y ) {
+          } else if ( item.insertion.y > lowConnection.insertion.y ) {
             lowConnection = item;
           }
         } );
@@ -296,19 +249,20 @@ function setCoordinates () {
       ctx.beginPath();
       ctx.strokeStyle = '#F00';
       ctx.moveTo( topDots.xL, topDots.yL );
-      if ( topDots.itemL.index !== topDots.itemR.index) {
-        ctx.lineTo( topConnection.dot.x, topConnection.dot.y );
+      if ( topDots.itemL.index !== topDots.itemR.index ) {
+        ctx.lineTo( topConnection.insertion.x, topConnection.insertion.y );
       }
       ctx.lineTo( topDots.xR, topDots.yR );
       ctx.stroke();
-      ctx.beginPath();
-      ctx.strokeStyle = '#00A8FF';
-      ctx.moveTo( lowDots.xL, lowDots.yL );
-      if ( lowDots.itemL.index !== lowDots.itemR.index ) {
-        ctx.lineTo( lowConnection.dot.x, lowConnection.dot.y );
-      }
-      ctx.lineTo( lowDots.xR, lowDots.yR );
-      ctx.stroke();
+      // ctx.beginPath();
+      // ctx.strokeStyle = '#00A8FF';
+      // ctx.moveTo( lowDots.xL, lowDots.yL );
+      // console.log( lowDots );
+      // if ( lowDots.itemL.index !== lowDots.itemR.index ) {
+      //   ctx.lineTo( lowConnection.insertion.x, lowConnection.insertion.y );
+      // }
+      // ctx.lineTo( lowDots.xR, lowDots.yR );
+      // ctx.stroke();
     } else {
       return;
     }
@@ -318,23 +272,48 @@ function setCoordinates () {
   }
 }
 
+class Connection {
+  constructor ( xL, yL, xR, yR, children, valueLeft, valueRight ) {
+    this.xL = xL;
+    this.xR = xR;
+    this.yL = yL;
+    this.yR = yR;
+    this.children = children;
+    this.valueLeft = valueLeft;
+    this.valueRight = valueRight;
+  }
+}
+
 function compareLineWithAllLines ( line, lines ) {
   let keeper = [];
   for ( let i = 0; i < lines.length; i++ ) {
     if ( line !== lines[ i ] ) {
-      let tmp = checkLineIntersection( line.leftSide.x, line.leftSide.y, line.rightSide.x, line.rightSide.y, lines[ i ].leftSide.x, lines[ i ].leftSide.y, lines[ i ].rightSide.x, lines[ i ].rightSide.y );
-      if ( tmp.x > LEFT_SIDE_WIDTH && tmp.x < RIGHT_SIDE_WIDTH ) {
-        keeper.push( {
-          dot      : tmp,
-          line_info: line
-        } );
+      let insertionInfo = checkLineIntersection( line.leftSide.x, line.leftSide.y, line.rightSide.x, line.rightSide.y, lines[ i ].leftSide.x, lines[ i ].leftSide.y, lines[ i ].rightSide.x, lines[ i ].rightSide.y, i );
+      if ( insertionInfo.x > LEFT_SIDE_WIDTH && insertionInfo.x < RIGHT_SIDE_WIDTH ) {
+        ctx.beginPath();
+        ctx.arc( insertionInfo.x, insertionInfo.y, 5, 0, 2 * Math.PI, true );
+        ctx.fill();
+        let obj = {
+          insertion: {
+            x: insertionInfo.x, y: insertionInfo.y
+          },
+          line1    : line,
+          line2    : lines[ i ]
+        };
+        keeper.push( obj );
       }
     }
   }
-  return keeper;
+  return new Connection( line.leftSide.x, line.leftSide.y, line.rightSide.x, line.rightSide.y, keeper, line.valLeft, line.valRight );
 }
 
-function checkLineIntersection ( line1StartX, line1StartY, line1EndX, line1EndY, line2StartX, line2StartY, line2EndX, line2EndY ) {
+function getBoundaryY ( minPoint, maxPoint, value ) {
+  const H_TOP    = 80,
+        H_BOTTOM = 420;
+  return Math.floor( Math.round( ( H_BOTTOM - H_TOP ) / ( minPoint - maxPoint ) * ( minPoint - value ) + H_TOP ) );
+}
+
+function checkLineIntersection ( line1StartX, line1StartY, line1EndX, line1EndY, line2StartX, line2StartY, line2EndX, line2EndY, i ) {
   let denominator,
       a,
       b,
@@ -356,8 +335,9 @@ function checkLineIntersection ( line1StartX, line1StartY, line1EndX, line1EndY,
   numerator2 = ( ( line1EndX - line1StartX ) * a ) - ( ( line1EndY - line1StartY ) * b );
   a = numerator1 / denominator;
   b = numerator2 / denominator;
-  result.x = line1StartX + ( a * ( line1EndX - line1StartX ) );
-  result.y = line1StartY + ( a * ( line1EndY - line1StartY ) );
+  result.x = Math.floor( line1StartX + ( a * ( line1EndX - line1StartX ) ) );
+  result.y = Math.floor( line1StartY + ( a * ( line1EndY - line1StartY ) ) );
+  result.index = i;
   if ( a > 0 && a < 1 ) {
     result.onLine1 = true;
   }
