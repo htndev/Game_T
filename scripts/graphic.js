@@ -116,8 +116,12 @@ function setCoordinates () {
       }
       tmp.forEach( arr => arr.sort( ( a, b ) => a.val - b.val ).reverse() );
       let waysArr = [];
+      console.log( tmp );
+      window.tmp = tmp;
       const MAX = tmp[ 0 ][ 0 ].val > tmp[ 1 ][ 0 ].val ? tmp[ 0 ][ 0 ].val : tmp[ 1 ][ 0 ].val,
-            MIN = tmp[ 0 ][ tmp[ 0 ].length - 1 ].val > tmp[ 1 ][ tmp[ 0 ].length - 1 ].val ? tmp[ 0 ][ tmp[ 0 ].length - 1 ].val : tmp[ 1 ][ tmp[ 0 ].length - 1 ].val;
+            MIN = +tmp[ 0 ][ tmp[ 0 ].length - 1 ].val < +tmp[ 1 ][ tmp[ 1 ].length - 1 ].val ? +tmp[ 0 ][ tmp[ 0 ].length - 1 ].val : +tmp[ 1 ][ tmp[ 1 ].length - 1 ].val;
+      console.log();
+      console.log( `Max: ${ MAX }, Min: ${ MIN }` );
       for ( let i = 0; i < tmp[ 0 ].length; i++ ) {
         let y1 = getBoundaryY( MAX, MIN, tmp[ 0 ][ i ].val ),
             y2 = getBoundaryY( MAX, MIN, tmp[ 1 ][ i ].val );
