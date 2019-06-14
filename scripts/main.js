@@ -1,11 +1,15 @@
 // Material features init
-$( document ).ready( function () {
-  $( '.tabs' ).tabs();
-} );
+try {
+  $( document ).ready( function () {
+    $( '.tabs' ).tabs();
+  } );
 
-$( document ).ready( function () {
-  $( '.tooltipped' ).tooltip();
-} );
+  $( document ).ready( function () {
+    $( '.tooltipped' ).tooltip();
+  } );
+} catch ( e ) {
+  console.log( e );
+}
 
 const
   firstPlayerStrategies  = document.querySelector( '#firstPlayerStrategies' ),
@@ -103,6 +107,7 @@ function toMatrix () {
     0, 0, 0, 0, 0, false, false, false, false, 0, null );
   gameMatrixTab.dispatchEvent( evt ); // element for click
 }
+
 function toSimplifing () {
   let evt = document.createEvent( 'MouseEvents' );
   evt.initMouseEvent( 'click', true, true, window,
@@ -148,8 +153,8 @@ document.addEventListener( 'keyup', function ( e ) {
 
 function KeyPress ( e ) {
   let evtobj = window.event
-               ? event
-               : e;
+    ? event
+    : e;
   if ( evtobj.keyCode === 8 && evtobj.ctrlKey ) {
     e.preventDefault();
     cleanSmpAreaHandler();

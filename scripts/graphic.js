@@ -30,7 +30,7 @@ const
   LINE_HEIGHT_MIN  = 80,
   DRAWING_SPACE    = LINE_HEIGHT_MAX - LINE_HEIGHT_MIN;
 
-let dotsInserted = [];
+let lineDots = [];
 
 graphicTab.addEventListener( 'click', function () {
   isCroppingYourself = false;
@@ -89,190 +89,239 @@ function redraw ( width, height ) {
 }
 
 function setCoordinates () {
+  lineDots = [];
   let graphicTable = getTableInArray( mainTable ),
       lengthP1     = graphicTable.length,
       lengthP2     = graphicTable[ 0 ].length,
       linesArray   = [],
-      space,
-      topDots      = {},
-      lowDots      = {},
       graphTable   = document.querySelector( '#graphTable' );
   graphTable.innerHTML = '';
   graphTable.appendChild( mainTable.cloneNode( true ) );
   if ( lengthP1 === 2 || lengthP2 === 2 ) {
     let valArr = getValuesFromInputArray( getInputsInTableArray( graphicTable ) );
-    if ( lengthP1 === 2 ) {
-      let tmp          = valArr,
+    if ( lengthP1 === 2 && lengthP2 === 2 ) {
+      let dotsArray    = valArr,
           relationship = [];
-      for ( let i = 0; i < tmp[ 0 ].length; i++ ) {
+      for ( let i = 0; i < dotsArray[ 0 ].length; i++ ) {
         relationship.push( {
-          l: tmp[ 0 ][ i ], r: tmp[ 1 ][ i ], startIndex: i
+          l: dotsArray[ 0 ][ i ], r: dotsArray[ 1 ][ i ], startIndex: i
         } );
       }
-      for ( let i = 0; i < tmp.length; i++ ) {
-        for ( let j = 0; j < tmp[ i ].length; j++ ) {
-          tmp[ i ][ j ] = { val: tmp[ i ][ j ], index: j };
+      for ( let i = 0; i < dotsArray.length; i++ ) {
+        for ( let j = 0; j < dotsArray[ i ].length; j++ ) {
+          dotsArray[ i ][ j ] = { val: dotsArray[ i ][ j ], index: j };
         }
       }
-      tmp.forEach( arr => arr.sort( ( a, b ) => a.val - b.val ).reverse() );
-      let waysArr = [];
-      console.log( tmp );
-      window.tmp = tmp;
-      const MAX = tmp[ 0 ][ 0 ].val > tmp[ 1 ][ 0 ].val ? tmp[ 0 ][ 0 ].val : tmp[ 1 ][ 0 ].val,
-            MIN = +tmp[ 0 ][ tmp[ 0 ].length - 1 ].val < +tmp[ 1 ][ tmp[ 1 ].length - 1 ].val ? +tmp[ 0 ][ tmp[ 0 ].length - 1 ].val : +tmp[ 1 ][ tmp[ 1 ].length - 1 ].val;
-      console.log();
-      console.log( `Max: ${ MAX }, Min: ${ MIN }` );
-      for ( let i = 0; i < tmp[ 0 ].length; i++ ) {
-        let y1 = getBoundaryY( MAX, MIN, tmp[ 0 ][ i ].val ),
-            y2 = getBoundaryY( MAX, MIN, tmp[ 1 ][ i ].val );
-        // console.log( y1, y2 );
-        drawPoint( LEFT_SIDE_WIDTH, y1, tmp[ 0 ][ i ].val, 'left' );
-        waysArr.push( {
-          item: tmp[ 0 ][ i ], x: LEFT_SIDE_WIDTH, y: y1, val: tmp[ 0 ][ i ].val
+      dotsArray.forEach( arr => arr.sort( ( a, b ) => a.val - b.val )
+                                   .reverse() );
+      let leftWay  = [],
+          rightWay = [];
+      const MAX = dotsArray[ 0 ][ 0 ].val > dotsArray[ 1 ][ 0 ].val ? dotsArray[ 0 ][ 0 ].val : dotsArray[ 1 ][ 0 ].val,
+            MIN = +dotsArray[ 0 ][ dotsArray[ 0 ].length - 1 ].val < +dotsArray[ 1 ][ dotsArray[ 1 ].length - 1 ].val ? +dotsArray[ 0 ][ dotsArray[ 0 ].length - 1 ].val : +dotsArray[ 1 ][ dotsArray[ 1 ].length - 1 ].val;
+      for ( let i = 0; i < dotsArray[ 0 ].length; i++ ) {
+        let y1 = getBoundaryY( MAX, MIN, dotsArray[ 0 ][ i ].val ),
+            y2 = getBoundaryY( MAX, MIN, dotsArray[ 1 ][ i ].val );
+        drawPoint( LEFT_SIDE_WIDTH, y1, dotsArray[ 0 ][ i ].val, 'left' );
+        leftWay.push( {
+          x    : LEFT_SIDE_WIDTH, y: y1, val: dotsArray[ 0 ][ i ].val,
+          index: dotsArray[ 0 ][ i ].index
         } );
-        drawPoint( RIGHT_SIDE_WIDTH, y2, tmp[ 1 ][ i ].val, 'right' );
-        waysArr.push( {
-          item: tmp[ 1 ][ i ], x: RIGHT_SIDE_WIDTH, y: y2,
-          val : tmp[ 1 ][ i ].val
+        drawPoint( RIGHT_SIDE_WIDTH, y2, dotsArray[ 1 ][ i ].val, 'right' );
+        rightWay.push( {
+          x    : RIGHT_SIDE_WIDTH, y: y2, val: dotsArray[ 1 ][ i ].val,
+          index: dotsArray[ 1 ][ i ].index
         } );
       }
-      waysArr.sort( ( a, b ) => a.item.index - b.item.index );
-      for ( let i = 0; i < waysArr.length; i++ ) {
-        if ( waysArr[ i + 1 ] !== undefined ) {
-          if ( waysArr[ i ].item.index === waysArr[ i + 1 ].item.index ) {
-            let line = new Line(
-              waysArr[ i ].x,
-              waysArr[ i ].y,
-              waysArr[ i + 1 ].x,
-              waysArr[ i + 1 ].y,
-              waysArr[ i ].val,
-              waysArr[ i + 1 ].val );
-            linesArray.push( line );
-          }
-        }
+      leftWay.sort( ( a, b ) => a.index - b.index );
+      rightWay.sort( ( a, b ) => a.index - b.index );
+      for ( let i = 0; i < leftWay.length; i++ ) {
+        linesArray.push( new Line( leftWay[ i ].x, leftWay[ i ].y, rightWay[ i ].x, rightWay[ i ].y, leftWay[ i ].val, rightWay[ i ].val ) );
       }
       linesArray.forEach( el => el.drawConnection() );
       let connections = [];
       for ( let i = 0; i < linesArray.length; i++ ) {
         connections.push( compareLineWithAllLines( linesArray[ i ], linesArray ) );
       }
-      console.log( connections );
-      // console.log( dotsInserted );
-      // dots.forEach( elem => {
-      //   elem.forEach( item => {
-      //     if ( item.insertion.y < topConnection.insertion.y ) {
-      //       topConnection = item;
-      //     } else if ( item.insertion.y > lowConnection.insertion.y ) {
-      //       lowConnection = item;
-      //     }
-      //   } );
-      // } );
-      // ctx.beginPath();
-      // ctx.strokeStyle = '#00A8FF';
-      // ctx.moveTo( lowDots.xL, lowDots.yL );
-      // if ( lowDots.itemL.index !== lowDots.itemR.index ) {
-      //   ctx.lineTo( lowConnection.insertion.x, lowConnection.insertion.y );
-      // }
-      // ctx.lineTo( lowDots.xR, lowDots.yR );
-      // ctx.stroke();
-    } else if ( lengthP2 === 2 ) {
-      let tmp          = switchArrayHeading( valArr ),
+      connections.sort( ( a, b ) => a.valueLeft - b.valueLeft ).reverse();
+      if ( connections[ 0 ].children.length > 0 ) {
+        lineDots.push( { x: connections[ 0 ].xL, y: connections[ 0 ].yL } );
+        lineDots.push( {
+          x: connections[ 1 ].children[ 0 ].insertion.x,
+          y: connections[ 1 ].children[ 0 ].insertion.y
+        } );
+        lineDots.push( { x: connections[ 1 ].xR, y: connections[ 1 ].yR } );
+        drawConnection( '#3498DB' );
+        lineDots = [];
+        lineDots.push( { x: connections[ 1 ].xL, y: connections[ 1 ].yL } );
+        lineDots.push( {
+          x: connections[ 1 ].children[ 0 ].insertion.x,
+          y: connections[ 1 ].children[ 0 ].insertion.y
+        } );
+        lineDots.push( { x: connections[ 0 ].xR, y: connections[ 0 ].yR } );
+        drawConnection( '#E84118' );
+      } else {
+        lineDots.push( { x: connections[ 0 ].xL, y: connections[ 0 ].yL } );
+        lineDots.push( { x: connections[ 0 ].xR, y: connections[ 0 ].yR } );
+        drawConnection( '#3498DB' );
+        lineDots = [];
+        lineDots.push( { x: connections[ 1 ].xL, y: connections[ 1 ].yL } );
+        lineDots.push( { x: connections[ 1 ].xR, y: connections[ 1 ].yR } );
+        drawConnection( '#E84118' );
+      }
+    } else if ( lengthP1 === 2 ) {
+      let dotsArray    = valArr,
           relationship = [];
-      valArr.forEach( ( item, index ) => {
-        relationship[ index ] = {
-          l: item[ 0 ], r: item[ 1 ], startIndex: index
-        };
-      } );
-      for ( let i = 0; i < tmp.length; i++ ) {
-        for ( let j = 0; j < tmp[ i ].length; j++ ) {
-          tmp[ i ][ j ] = {
-            val  : tmp[ i ][ j ],
-            index: j
-          };
-        }
-      }
-      tmp.forEach( arr => arr.sort( ( a, b ) => a.val - b.val ).reverse() );
-      tmp.forEach( ( arr, index ) => arr.forEach( ( elem, _index ) => tmp[ index ][ _index ].sortedIndex = _index ) );
-      tmp = switchArrayHeading( tmp );
-      let waysArr = [];
-      const MIN = tmp[ 0 ][ 0 ].val > tmp[ 0 ][ 1 ].val ? tmp[ 0 ][ 0 ].val : tmp[ 0 ][ 1 ].val,
-            MAX = tmp[ tmp.length - 1 ][ 0 ] > tmp[ tmp.length - 1 ][ 1 ] ? tmp[ tmp.length - 1 ][ 0 ].val : tmp[ tmp.length - 1 ][ 1 ].val;
-      for ( let i = 0; i < tmp.length; i++ ) {
-        let y1 = getBoundaryY( MIN, MAX, tmp[ i ][ 0 ].val ),
-            y2 = getBoundaryY( MIN, MAX, tmp[ i ][ 1 ].val );
-        drawPoint( LEFT_SIDE_WIDTH, y1, tmp[ i ][ 0 ].val, 'left' );
-        waysArr.push( {
-          item: tmp[ i ][ 0 ], x: LEFT_SIDE_WIDTH, y: y1
-        } );
-        drawPoint( RIGHT_SIDE_WIDTH, y2, tmp[ i ][ 1 ].val, 'right' );
-        waysArr.push( {
-          item: tmp[ i ][ 1 ], x: RIGHT_SIDE_WIDTH, y: y2
+      for ( let i = 0; i < dotsArray[ 0 ].length; i++ ) {
+        relationship.push( {
+          l: dotsArray[ 0 ][ i ], r: dotsArray[ 1 ][ i ], startIndex: i
         } );
       }
-      topDots = {
-        itemL: tmp[ 0 ][ 0 ],
-        xL   : LEFT_SIDE_WIDTH,
-        yL   : getBoundaryY( MIN, MAX, tmp[ 0 ][ 0 ].val ),
-        itemR: tmp[ 0 ][ 1 ],
-        xR   : RIGHT_SIDE_WIDTH,
-        yR   : getBoundaryY( MIN, MAX, tmp[ 0 ][ 1 ].val )
-      };
-      waysArr.sort( ( a, b ) => a.item.index - b.item.index );
-      for ( let i = 0; i < waysArr.length; i++ ) {
-        if ( waysArr[ i + 1 ] !== undefined ) {
-          if ( waysArr[ i ].item.index === waysArr[ i + 1 ].item.index ) {
-            let line = new Line(
-              waysArr[ i ].x,
-              waysArr[ i ].y,
-              waysArr[ i + 1 ].x,
-              waysArr[ i + 1 ].y );
-            linesArray.push( line );
-          }
+      for ( let i = 0; i < dotsArray.length; i++ ) {
+        for ( let j = 0; j < dotsArray[ i ].length; j++ ) {
+          dotsArray[ i ][ j ] = { val: dotsArray[ i ][ j ], index: j };
         }
+      }
+      dotsArray.forEach( arr => arr.sort( ( a, b ) => a.val - b.val )
+                                   .reverse() );
+      let leftWay  = [],
+          rightWay = [];
+      const MAX = dotsArray[ 0 ][ 0 ].val > dotsArray[ 1 ][ 0 ].val ? dotsArray[ 0 ][ 0 ].val : dotsArray[ 1 ][ 0 ].val,
+            MIN = +dotsArray[ 0 ][ dotsArray[ 0 ].length - 1 ].val < +dotsArray[ 1 ][ dotsArray[ 1 ].length - 1 ].val ? +dotsArray[ 0 ][ dotsArray[ 0 ].length - 1 ].val : +dotsArray[ 1 ][ dotsArray[ 1 ].length - 1 ].val;
+      for ( let i = 0; i < dotsArray[ 0 ].length; i++ ) {
+        let y1 = getBoundaryY( MAX, MIN, dotsArray[ 0 ][ i ].val ),
+            y2 = getBoundaryY( MAX, MIN, dotsArray[ 1 ][ i ].val );
+        drawPoint( LEFT_SIDE_WIDTH, y1, dotsArray[ 0 ][ i ].val, 'left' );
+        leftWay.push( {
+          x    : LEFT_SIDE_WIDTH, y: y1, val: dotsArray[ 0 ][ i ].val,
+          index: dotsArray[ 0 ][ i ].index
+        } );
+        drawPoint( RIGHT_SIDE_WIDTH, y2, dotsArray[ 1 ][ i ].val, 'right' );
+        rightWay.push( {
+          x    : RIGHT_SIDE_WIDTH, y: y2, val: dotsArray[ 1 ][ i ].val,
+          index: dotsArray[ 1 ][ i ].index
+        } );
+      }
+      leftWay.sort( ( a, b ) => a.index - b.index );
+      rightWay.sort( ( a, b ) => a.index - b.index );
+      for ( let i = 0; i < leftWay.length; i++ ) {
+        linesArray.push( new Line( leftWay[ i ].x, leftWay[ i ].y, rightWay[ i ].x, rightWay[ i ].y, leftWay[ i ].val, rightWay[ i ].val ) );
       }
       linesArray.forEach( el => el.drawConnection() );
-      let dots = [];
+      let connections = [];
       for ( let i = 0; i < linesArray.length; i++ ) {
-        dots.push( compareLineWithAllLines( linesArray[ i ], linesArray ) );
+        connections.push( compareLineWithAllLines( linesArray[ i ], linesArray ) );
       }
-      let topConnection = {
-            dot: { x: 99999, y: 99999 }
-          },
-          lowConnection = {
-            dot: { x: -99999, y: -99999 }
+      connections.sort( ( a, b ) => a.valueRight - b.valueRight );
+      let min        = { value: 999, index: 0 },
+          minIndexes = [];
+      connections.forEach( ( element, index ) => {
+        if ( min.value > +element.valueRight ) {
+          minIndexes = [];
+          min = {
+            value: +element.valueRight, index: index
           };
-      dots.forEach( elem => {
-        elem.forEach( item => {
-          if ( item.insertion.y < topConnection.insertion.y ) {
-            topConnection = item;
-          } else if ( item.insertion.y > lowConnection.insertion.y ) {
-            lowConnection = item;
-          }
-        } );
+          minIndexes.push( index );
+        } else if ( min.value === +( element.valueRight ) ) {
+          minIndexes.push( index );
+        }
       } );
-      ctx.beginPath();
-      ctx.strokeStyle = '#F00';
-      ctx.moveTo( topDots.xL, topDots.yL );
-      if ( topDots.itemL.index !== topDots.itemR.index ) {
-        ctx.lineTo( topConnection.insertion.x, topConnection.insertion.y );
+      minIndexes.forEach( item => connections[ item ].end = true );
+      connections.sort( ( a, b ) => a.valueLeft - b.valueLeft );
+      min = { value: 999, index: 0 };
+      minIndexes = [];
+      connections.forEach( ( element, index ) => {
+        if ( min.value > +element.valueLeft ) {
+          minIndexes = [];
+          min = {
+            value: +element.valueLeft, index: index
+          };
+          minIndexes.push( index );
+        } else if ( min.value === +( element.valueLeft ) ) {
+          minIndexes.push( index );
+        }
+      } );
+      minIndexes.forEach( item => connections[ item ].start = true );
+      lineDots.push( { x: connections[ 0 ].xL, y: connections[ 0 ].yL } );
+      getConnections( connections[ 0 ], connections, 'bottom' );
+    } else if ( lengthP2 === 2 ) {
+      let dotsArray    = switchArrayHeading( valArr ),
+          relationship = [];
+      for ( let i = 0; i < dotsArray[ 0 ].length; i++ ) {
+        relationship.push( {
+          l: dotsArray[ 0 ][ i ], r: dotsArray[ 1 ][ i ], startIndex: i
+        } );
       }
-      ctx.lineTo( topDots.xR, topDots.yR );
-      ctx.stroke();
-      // ctx.beginPath();
-      // ctx.strokeStyle = '#00A8FF';
-      // ctx.moveTo( lowDots.xL, lowDots.yL );
-      // console.log( lowDots );
-      // if ( lowDots.itemL.index !== lowDots.itemR.index ) {
-      //   ctx.lineTo( lowConnection.insertion.x, lowConnection.insertion.y );
-      // }
-      // ctx.lineTo( lowDots.xR, lowDots.yR );
-      // ctx.stroke();
-    } else {
-      return;
+      for ( let i = 0; i < dotsArray.length; i++ ) {
+        for ( let j = 0; j < dotsArray[ i ].length; j++ ) {
+          dotsArray[ i ][ j ] = { val: dotsArray[ i ][ j ], index: j };
+        }
+      }
+      dotsArray.forEach( arr => arr.sort( ( a, b ) => a.val - b.val )
+                                   .reverse() );
+      let leftWay  = [],
+          rightWay = [];
+      const MAX = dotsArray[ 0 ][ 0 ].val > dotsArray[ 1 ][ 0 ].val ? dotsArray[ 0 ][ 0 ].val : dotsArray[ 1 ][ 0 ].val,
+            MIN = +dotsArray[ 0 ][ dotsArray[ 0 ].length - 1 ].val < +dotsArray[ 1 ][ dotsArray[ 1 ].length - 1 ].val ? +dotsArray[ 0 ][ dotsArray[ 0 ].length - 1 ].val : +dotsArray[ 1 ][ dotsArray[ 1 ].length - 1 ].val;
+      for ( let i = 0; i < dotsArray[ 0 ].length; i++ ) {
+        let y1 = getBoundaryY( MAX, MIN, dotsArray[ 0 ][ i ].val ),
+            y2 = getBoundaryY( MAX, MIN, dotsArray[ 1 ][ i ].val );
+        drawPoint( LEFT_SIDE_WIDTH, y1, dotsArray[ 0 ][ i ].val, 'left' );
+        leftWay.push( {
+          x    : LEFT_SIDE_WIDTH, y: y1, val: dotsArray[ 0 ][ i ].val,
+          index: dotsArray[ 0 ][ i ].index
+        } );
+        drawPoint( RIGHT_SIDE_WIDTH, y2, dotsArray[ 1 ][ i ].val, 'right' );
+        rightWay.push( {
+          x    : RIGHT_SIDE_WIDTH, y: y2, val: dotsArray[ 1 ][ i ].val,
+          index: dotsArray[ 1 ][ i ].index
+        } );
+      }
+      leftWay.sort( ( a, b ) => a.index - b.index );
+      rightWay.sort( ( a, b ) => a.index - b.index );
+      for ( let i = 0; i < leftWay.length; i++ ) {
+        linesArray.push( new Line( leftWay[ i ].x, leftWay[ i ].y, rightWay[ i ].x, rightWay[ i ].y, leftWay[ i ].val, rightWay[ i ].val ) );
+      }
+      linesArray.forEach( el => el.drawConnection() );
+      let connections = [];
+      for ( let i = 0; i < linesArray.length; i++ ) {
+        connections.push( compareLineWithAllLines( linesArray[ i ], linesArray ) );
+      }
+      connections.sort( ( a, b ) => a.valueRight - b.valueRight );
+      let max        = { value: -999, index: 0 },
+          maxIndexes = [];
+      connections.forEach( ( element, index ) => {
+        if ( max.value < +element.valueRight ) {
+          maxIndexes = [];
+          max = {
+            value: +element.valueRight, index: index
+          };
+          maxIndexes.push( index );
+        } else if ( max.value === +( element.valueRight ) ) {
+          maxIndexes.push( index );
+        }
+      } );
+      maxIndexes.forEach( item => connections[ item ].end = true );
+      connections.sort( ( a, b ) => a.valueLeft - b.valueLeft );
+      max = { value: -999, index: 0 };
+      maxIndexes = [];
+      connections.forEach( ( element, index ) => {
+        if ( max.value < +element.valueLeft ) {
+          maxIndexes = [];
+          max = {
+            value: +element.valueLeft, index: index
+          };
+          maxIndexes.push( index );
+        } else if ( max.value === +( element.valueLeft ) ) {
+          maxIndexes.push( index );
+        }
+      } );
+      maxIndexes.forEach( item => connections[ item ].start = true );
+      connections.reverse();
+      lineDots.push( { x: connections[ 0 ].xL, y: connections[ 0 ].yL } );
+      getConnections( connections[ 0 ], connections, 'top' );
     }
   } else {
-    toMatrix();
-    return;
+    return toMatrix();
   }
 }
 
@@ -294,15 +343,16 @@ function compareLineWithAllLines ( line, lines ) {
     if ( line !== lines[ i ] ) {
       let insertionInfo = checkLineIntersection( line.leftSide.x, line.leftSide.y, line.rightSide.x, line.rightSide.y, lines[ i ].leftSide.x, lines[ i ].leftSide.y, lines[ i ].rightSide.x, lines[ i ].rightSide.y, i );
       if ( insertionInfo.x > LEFT_SIDE_WIDTH && insertionInfo.x < RIGHT_SIDE_WIDTH ) {
-        ctx.beginPath();
-        ctx.arc( insertionInfo.x, insertionInfo.y, 5, 0, 2 * Math.PI, true );
-        ctx.fill();
+        // ctx.beginPath();
+        // ctx.arc( insertionInfo.x, insertionInfo.y, 5, 0, 2 * Math.PI, true );
+        // ctx.fill();
         let obj = {
           insertion: {
             x: insertionInfo.x, y: insertionInfo.y
           },
           line1    : line,
-          line2    : lines[ i ]
+          line2    : lines[ i ],
+          checked  : false
         };
         keeper.push( obj );
       }
@@ -315,6 +365,166 @@ function getBoundaryY ( minPoint, maxPoint, value ) {
   const H_TOP    = 80,
         H_BOTTOM = 420;
   return Math.floor( Math.round( ( H_BOTTOM - H_TOP ) / ( minPoint - maxPoint ) * ( minPoint - value ) + H_TOP ) );
+}
+
+function getConnections ( currentConnection, connections, side ) {
+  if ( side === 'bottom' ) {
+    if ( currentConnection !== undefined ) {
+      if ( currentConnection.end ) {
+        lineDots.push( { x: currentConnection.xR, y: currentConnection.yR } );
+        drawConnection( '#E84118' );
+      } else {
+        if ( currentConnection.children.length > 1 ) {
+          currentConnection.children.sort( ( a, b ) => a.insertion.y - b.insertion.y );
+        }
+        let bestItem,
+            received = false,
+            iter     = 0;
+        currentConnection.children.sort( ( a, b ) => a.insertion.x - b.insertion.x );
+        currentConnection.children.forEach( item => {
+          if ( received ) {
+            return;
+          }
+          connections.forEach( conn => {
+            if ( conn.valueLeft === item.line2.valLeft && conn.valueRight === item.line2.valRight ) {
+              if ( received ) {
+                return;
+              }
+              if ( conn.end ) {
+                if ( received ) {
+                  return;
+                }
+                conn.children.sort( ( a, b ) => a.insertion.x - b.insertion.x );
+                conn.children.forEach( ( ins, i ) => {
+                  if ( received ) {
+                    return;
+                  }
+                  if ( JSON.stringify( item.insertion ) === JSON.stringify( ins.insertion ) ) {
+                    if ( i === conn.children.length - 1 ) {
+                      bestItem = item;
+                      received = true;
+                      iter++;
+                      return;
+                    }
+                  }
+                } );
+              }
+            }
+          } );
+        } );
+        if ( received ) {
+          connections.forEach( element => {
+            if ( element.xL === bestItem.line2.leftSide.x && element.xR === bestItem.line2.rightSide.x && element.yL === bestItem.line2.leftSide.y && element.yR === bestItem.line2.rightSide.y ) {
+              lineDots.push( bestItem.insertion );
+              return getConnections( element, connections, 'bottom' );
+            }
+          } );
+        } else {
+          let minY = currentConnection.children[ 0 ];
+          currentConnection.children.forEach( item => {
+            if ( item.insertion.y > minY.insertion.y && item.insertion.x > minY.insertion.x && !item.checked ) {
+              minY = item;
+            }
+          } );
+          connections.forEach( element => {
+            if ( element.xL === minY.line2.leftSide.x && element.xR === minY.line2.rightSide.x && element.yL === minY.line2.leftSide.y && element.yR === minY.line2.rightSide.y ) {
+              lineDots.push( minY.insertion );
+              element.children.forEach( item => {
+                if ( JSON.stringify( item.insertion ) === JSON.stringify( minY.insertion ) ) {
+                  item.checked = true;
+                }
+              } );
+              currentConnection.children.forEach( item => {
+                if ( JSON.stringify( item.insertion ) === JSON.stringify( minY.insertion ) ) {
+                  item.checked = true;
+                }
+              } );
+              return getConnections( element, connections, 'bottom' );
+            }
+          } );
+        }
+      }
+    }
+  } else if ( side === 'top' ) {
+    if ( currentConnection !== undefined ) {
+      if ( currentConnection.end ) {
+        lineDots.push( { x: currentConnection.xR, y: currentConnection.yR } );
+        drawConnection( '#3498DB' );
+      } else {
+        if ( currentConnection.children.length > 1 ) {
+          currentConnection.children.sort( ( a, b ) => a.insertion.y - b.insertion.y );
+          currentConnection.children.reverse();
+        }
+        let bestItem,
+            received = false,
+            iter     = 0;
+        currentConnection.children.sort( ( a, b ) => a.insertion.x - b.insertion.x );
+        currentConnection.children.reverse();
+        currentConnection.children.forEach( item => {
+          if ( received ) {
+            return;
+          }
+          connections.forEach( conn => {
+            if ( conn.valueLeft === item.line2.valLeft && conn.valueRight === item.line2.valRight ) {
+              if ( received ) {
+                return;
+              }
+              if ( conn.end ) {
+                if ( received ) {
+                  return;
+                }
+                conn.children.sort( ( a, b ) => a.insertion.x - b.insertion.x );
+                conn.children.forEach( ( ins, i ) => {
+                  if ( received ) {
+                    return;
+                  }
+                  if ( JSON.stringify( item.insertion ) === JSON.stringify( ins.insertion ) ) {
+                    if ( i === conn.children.length - 1 ) {
+                      bestItem = item;
+                      received = true;
+                      iter++;
+                      return;
+                    }
+                  }
+                } );
+              }
+            }
+          } );
+        } );
+        if ( received ) {
+          connections.forEach( element => {
+            if ( element.xL === bestItem.line2.leftSide.x && element.xR === bestItem.line2.rightSide.x && element.yL === bestItem.line2.leftSide.y && element.yR === bestItem.line2.rightSide.y ) {
+              lineDots.push( bestItem.insertion );
+              return getConnections( element, connections, 'top' );
+            }
+          } );
+        } else {
+          let maxY = currentConnection.children[ 0 ];
+          currentConnection.children.forEach( item => {
+            if ( item.insertion.y < maxY.insertion.y && !item.checked ) {
+              maxY = item;
+            }
+          } );
+          connections.forEach( element => {
+            if ( element.xL === maxY.line2.leftSide.x && element.xR === maxY.line2.rightSide.x && element.yL === maxY.line2.leftSide.y && element.yR === maxY.line2.rightSide.y ) {
+              lineDots.push( maxY.insertion );
+              element.children.forEach( item => {
+                if ( JSON.stringify( item.insertion ) === JSON.stringify( maxY.insertion ) ) {
+                  item.checked = true;
+                }
+              } );
+              currentConnection.children.forEach( item => {
+                if ( JSON.stringify( item.insertion ) === JSON.stringify( maxY.insertion ) ) {
+                  item.checked = true;
+                }
+              } );
+              return getConnections( element, connections, 'top' );
+            }
+          } );
+        }
+      }
+    }
+  }
 }
 
 function checkLineIntersection ( line1StartX, line1StartY, line1EndX, line1EndY, line2StartX, line2StartY, line2EndX, line2EndY, i ) {
@@ -354,4 +564,16 @@ function checkLineIntersection ( line1StartX, line1StartY, line1EndX, line1EndY,
 function drawPoint ( x, y, value, side ) {
   ctx.fillRect( x - 2, y - 2, 4, 4 );
   ctx.fillText( '' + value, side === 'left' ? x - 15 : x + 15, y + 5 );
+}
+
+function drawConnection ( color ) {
+  ctx.beginPath();
+  ctx.strokeStyle = color;
+  ctx.moveTo( lineDots[ 0 ].x, lineDots[ 0 ].y );
+  ctx.lineWidth = 3;
+  for ( let i = 1; i < lineDots.length; i++ ) {
+    ctx.lineTo( lineDots[ i ].x, lineDots[ i ].y );
+  }
+  ctx.stroke();
+  ctx.lineWidth = 1;
 }
